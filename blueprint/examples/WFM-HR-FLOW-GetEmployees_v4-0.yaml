@@ -1,0 +1,202 @@
+workflow:
+  name: WFM-HR-FLOW-GetEmployees
+  division: Home
+  startUpRef: "/workflow/states/state[Initial State_10]"
+  defaultLanguage: en-us
+  supportedLanguages:
+    en-us:
+      none: true
+  variables:
+    - stringVariable:
+        name: Flow.error
+        initialValue:
+          noValue: true
+        isInput: false
+        isOutput: true
+    - stringCollectionVariable:
+        name: Flow.result
+        initialValue:
+          noValue: true
+        isInput: false
+        isOutput: true
+  settingsErrorHandling:
+    errorHandling:
+      endWorkflow:
+        none: true
+  states:
+    - state:
+        name: Initial State
+        refId: Initial State_10
+        variables:
+          - stringVariable:
+              name: State.employeeFirstName
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringCollectionVariable:
+              name: State.employeeFirstNames
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.employeeId
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringCollectionVariable:
+              name: State.employeeIds
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.employeeLastName
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringCollectionVariable:
+              name: State.employeeLastNames
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.employeeWorkEmail
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringCollectionVariable:
+              name: State.employeeWorkEmails
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.errorCode
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.errorMessage
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - integerVariable:
+              name: State.errorStatus
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - integerVariable:
+              name: State.index
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.result
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+        actions:
+          - callData:
+              name: Call Data Action
+              timeout:
+                lit:
+                  minutes: 1
+              category:
+                Web Services Data Actions (WFM-HR):
+                  dataAction:
+                    Get Employee List:
+                      successOutputs:
+                        employees.id:
+                          var: State.employeeIds
+                        employees.workEmail:
+                          var: State.employeeWorkEmails
+                        employees.firstName:
+                          var: State.employeeFirstNames
+                        employees.lastName:
+                          var: State.employeeLastNames
+                      failureOutputs:
+                        errorCode:
+                          var: State.errorCode
+                        status:
+                          var: State.errorStatus
+                        correlationId:
+                          noValue: true
+                        entityId:
+                          noValue: true
+                        entityName:
+                          noValue: true
+                        userMessage:
+                          var: State.errorMessage
+                        userParamsMessage:
+                          noValue: true
+                        userParams.key:
+                          noValue: true
+                        userParams.value:
+                          noValue: true
+                        details.errorCode:
+                          noValue: true
+                        details.fieldName:
+                          noValue: true
+                        details.entityId:
+                          noValue: true
+                        details.entityName:
+                          noValue: true
+              outputs:
+                success:
+                  actions:
+                    - loop:
+                        name: Loop
+                        currentIndex:
+                          var: State.index
+                        loopCount:
+                          exp: Count(State.employeeIds)
+                        outputs:
+                          loop:
+                            actions:
+                              - updateData:
+                                  name: Update Data
+                                  statements:
+                                    - string:
+                                        variable: State.employeeId
+                                        value:
+                                          exp: GetAt(State.employeeIds, ToInt(State.index))
+                                    - string:
+                                        variable: State.employeeWorkEmail
+                                        value:
+                                          exp: GetAt(State.employeeWorkEmails, ToInt(State.index))
+                                    - string:
+                                        variable: State.employeeFirstName
+                                        value:
+                                          exp: GetAt(State.employeeFirstNames, ToInt(State.index))
+                                    - string:
+                                        variable: State.employeeLastName
+                                        value:
+                                          exp: GetAt(State.employeeLastNames, ToInt(State.index))
+                                    - stringCollection:
+                                        variable: Flow.result
+                                        value:
+                                          exp: AddItem(Flow.result, State.employeeId + "," + State.employeeWorkEmail + ",'" + State.employeeFirstName + " " + State.employeeLastName + "'")
+                failure:
+                  actions:
+                    - updateData:
+                        name: Update Data
+                        statements:
+                          - string:
+                              variable: Flow.error
+                              value:
+                                exp: "\"'\" + State.errorMessage + \"',\" + State.errorCode + \",\" + ToString(State.errorStatus)"
+          - endWorkflow:
+              name: End Workflow
+              exitReason:
+                noValue: true

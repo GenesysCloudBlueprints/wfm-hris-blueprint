@@ -1,0 +1,174 @@
+workflow:
+  name: WFM-HR-FLOW-AddTimeOffRequest-VT
+  division: Home
+  startUpRef: "/workflow/states/state[Initial State_10]"
+  defaultLanguage: en-us
+  supportedLanguages:
+    en-us:
+      none: true
+  variables:
+    - integerVariable:
+        name: Flow.amount
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: false
+    - stringVariable:
+        name: Flow.dates_amount
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: false
+    - stringVariable:
+        name: Flow.dates_ymd
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: false
+    - stringVariable:
+        name: Flow.employeeId
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: false
+    - stringVariable:
+        name: Flow.end
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: false
+    - stringVariable:
+        name: Flow.error
+        initialValue:
+          noValue: true
+        isInput: false
+        isOutput: true
+    - stringVariable:
+        name: Flow.result
+        initialValue:
+          noValue: true
+        isInput: false
+        isOutput: true
+    - stringVariable:
+        name: Flow.start
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: false
+    - stringVariable:
+        name: Flow.status
+        description: "The possible status values are: \"approved\", \"denied\" (or \"declined\"), \"requested\"."
+        initialValue:
+          lit: approved
+        isInput: true
+        isOutput: false
+    - stringVariable:
+        name: Flow.timeOffTypeId
+        initialValue:
+          noValue: true
+        isInput: true
+        isOutput: false
+  settingsErrorHandling:
+    errorHandling:
+      endWorkflow:
+        none: true
+  states:
+    - state:
+        name: Initial State
+        refId: Initial State_10
+        variables:
+          - stringVariable:
+              name: State.dates_amount_str
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.errorCode
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - stringVariable:
+              name: State.errorMessage
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+          - integerVariable:
+              name: State.errorStatus
+              initialValue:
+                noValue: true
+              isInput: false
+              isOutput: false
+        actions:
+          - callData:
+              name: Call Data Action
+              timeout:
+                lit:
+                  minutes: 1
+              category:
+                Web Services Data Actions (WFM-HR):
+                  dataAction:
+                    Add a Time Off Request (50 days):
+                      inputs:
+                        employeeId:
+                          exp: Flow.employeeId
+                        status:
+                          exp: Flow.status
+                        start:
+                          exp: Flow.start
+                        end:
+                          exp: Flow.end
+                        timeOffTypeId:
+                          exp: Flow.timeOffTypeId
+                        amount:
+                          exp: ToString(Flow.amount)
+                        dates_ymd:
+                          exp: Flow.dates_ymd
+                        dates_amount:
+                          exp: Flow.dates_amount
+                      successOutputs:
+                        value:
+                          var: Flow.result
+                      failureOutputs:
+                        errorCode:
+                          var: State.errorCode
+                        status:
+                          var: State.errorStatus
+                        correlationId:
+                          noValue: true
+                        entityId:
+                          noValue: true
+                        entityName:
+                          noValue: true
+                        userMessage:
+                          var: State.errorMessage
+                        userParamsMessage:
+                          noValue: true
+                        userParams.key:
+                          noValue: true
+                        userParams.value:
+                          noValue: true
+                        details.errorCode:
+                          noValue: true
+                        details.fieldName:
+                          noValue: true
+                        details.entityId:
+                          noValue: true
+                        details.entityName:
+                          noValue: true
+              outputs:
+                failure:
+                  actions:
+                    - updateData:
+                        name: Update Data
+                        statements:
+                          - string:
+                              variable: Flow.error
+                              value:
+                                exp: "\"'\" + State.errorMessage + \"',\" + State.errorCode + \",\" + ToString(State.errorStatus)"
+          - endWorkflow:
+              name: End Workflow
+              exitReason:
+                noValue: true

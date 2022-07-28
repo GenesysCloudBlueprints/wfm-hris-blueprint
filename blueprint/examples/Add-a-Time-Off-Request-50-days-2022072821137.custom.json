@@ -1,0 +1,74 @@
+{
+  "name": "Add a Time Off Request (50 days) - Exported 2022-07-28 @ 2:11",
+  "integrationType": "custom-rest-actions",
+  "actionType": "custom",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "https://api.bamboohr.com/api/gateway.phpgenesystest/v1/employees/${input.employeeId}/time_off/request",
+      "requestType": "PUT",
+      "headers": {
+        "Accept": "application/json"
+      },
+      "requestTemplate": "#set ($datesYmdArray = $input.dates_ymd.split(\",\"))\n#set ($datesAmountsArray = $input.dates_amount.split(\",\"))\n{\n\"status\": \"$input.status\",\n\"start\": \"$input.start\",\n\"end\": \"$input.end\",\n\"timeOffTypeId\": \"$input.timeOffTypeId\",\n\"amount\": \"$input.amount\",\n\"dates\" : [\n#if($datesYmdArray.size() > 0){\"ymd\": \"$datesYmdArray[0].trim()\", \"amount\": \"$datesAmountsArray[0].trim()\"}#end\n#if($datesYmdArray.size() > 1), {\"ymd\": \"$datesYmdArray[1]\", \"amount\": \"$datesAmountsArray[1]\"}#end\n#if($datesYmdArray.size() > 2), {\"ymd\": \"$datesYmdArray[2]\", \"amount\": \"$datesAmountsArray[2]\"}#end\n#if($datesYmdArray.size() > 3), {\"ymd\": \"$datesYmdArray[3]\", \"amount\": \"$datesAmountsArray[3]\"}#end\n#if($datesYmdArray.size() > 4), {\"ymd\": \"$datesYmdArray[4]\", \"amount\": \"$datesAmountsArray[4]\"}#end\n#if($datesYmdArray.size() > 5), {\"ymd\": \"$datesYmdArray[5]\", \"amount\": \"$datesAmountsArray[5]\"}#end\n#if($datesYmdArray.size() > 6), {\"ymd\": \"$datesYmdArray[6]\", \"amount\": \"$datesAmountsArray[6]\"}#end\n#if($datesYmdArray.size() > 7), {\"ymd\": \"$datesYmdArray[7]\", \"amount\": \"$datesAmountsArray[7]\"}#end\n#if($datesYmdArray.size() > 8), {\"ymd\": \"$datesYmdArray[8]\", \"amount\": \"$datesAmountsArray[8]\"}#end\n#if($datesYmdArray.size() > 9), {\"ymd\": \"$datesYmdArray[9]\", \"amount\": \"$datesAmountsArray[9]\"}#end\n#if($datesYmdArray.size() > 10), {\"ymd\": \"$datesYmdArray[10]\", \"amount\": \"$datesAmountsArray[10]\"}#end\n#if($datesYmdArray.size() > 11), {\"ymd\": \"$datesYmdArray[11]\", \"amount\": \"$datesAmountsArray[11]\"}#end\n#if($datesYmdArray.size() > 12), {\"ymd\": \"$datesYmdArray[12]\", \"amount\": \"$datesAmountsArray[12]\"}#end\n#if($datesYmdArray.size() > 13), {\"ymd\": \"$datesYmdArray[13]\", \"amount\": \"$datesAmountsArray[13]\"}#end\n#if($datesYmdArray.size() > 14), {\"ymd\": \"$datesYmdArray[14]\", \"amount\": \"$datesAmountsArray[14]\"}#end\n#if($datesYmdArray.size() > 15), {\"ymd\": \"$datesYmdArray[15]\", \"amount\": \"$datesAmountsArray[15]\"}#end\n#if($datesYmdArray.size() > 16), {\"ymd\": \"$datesYmdArray[16]\", \"amount\": \"$datesAmountsArray[16]\"}#end\n#if($datesYmdArray.size() > 17), {\"ymd\": \"$datesYmdArray[17]\", \"amount\": \"$datesAmountsArray[17]\"}#end\n#if($datesYmdArray.size() > 18), {\"ymd\": \"$datesYmdArray[18]\", \"amount\": \"$datesAmountsArray[18]\"}#end\n#if($datesYmdArray.size() > 19), {\"ymd\": \"$datesYmdArray[19]\", \"amount\": \"$datesAmountsArray[19]\"}#end\n#if($datesYmdArray.size() > 20), {\"ymd\": \"$datesYmdArray[20]\", \"amount\": \"$datesAmountsArray[20]\"}#end\n#if($datesYmdArray.size() > 21), {\"ymd\": \"$datesYmdArray[21]\", \"amount\": \"$datesAmountsArray[21]\"}#end\n#if($datesYmdArray.size() > 22), {\"ymd\": \"$datesYmdArray[22]\", \"amount\": \"$datesAmountsArray[22]\"}#end\n#if($datesYmdArray.size() > 23), {\"ymd\": \"$datesYmdArray[23]\", \"amount\": \"$datesAmountsArray[23]\"}#end\n#if($datesYmdArray.size() > 24), {\"ymd\": \"$datesYmdArray[24]\", \"amount\": \"$datesAmountsArray[24]\"}#end\n#if($datesYmdArray.size() > 25), {\"ymd\": \"$datesYmdArray[25]\", \"amount\": \"$datesAmountsArray[25]\"}#end\n#if($datesYmdArray.size() > 26), {\"ymd\": \"$datesYmdArray[26]\", \"amount\": \"$datesAmountsArray[26]\"}#end\n#if($datesYmdArray.size() > 27), {\"ymd\": \"$datesYmdArray[27]\", \"amount\": \"$datesAmountsArray[27]\"}#end\n#if($datesYmdArray.size() > 28), {\"ymd\": \"$datesYmdArray[28]\", \"amount\": \"$datesAmountsArray[28]\"}#end\n#if($datesYmdArray.size() > 29), {\"ymd\": \"$datesYmdArray[29]\", \"amount\": \"$datesAmountsArray[29]\"}#end\n#if($datesYmdArray.size() > 30), {\"ymd\": \"$datesYmdArray[30]\", \"amount\": \"$datesAmountsArray[30]\"}#end\n#if($datesYmdArray.size() > 31), {\"ymd\": \"$datesYmdArray[31]\", \"amount\": \"$datesAmountsArray[31]\"}#end\n#if($datesYmdArray.size() > 32), {\"ymd\": \"$datesYmdArray[32]\", \"amount\": \"$datesAmountsArray[32]\"}#end\n#if($datesYmdArray.size() > 33), {\"ymd\": \"$datesYmdArray[33]\", \"amount\": \"$datesAmountsArray[33]\"}#end\n#if($datesYmdArray.size() > 34), {\"ymd\": \"$datesYmdArray[34]\", \"amount\": \"$datesAmountsArray[34]\"}#end\n#if($datesYmdArray.size() > 35), {\"ymd\": \"$datesYmdArray[35]\", \"amount\": \"$datesAmountsArray[35]\"}#end\n#if($datesYmdArray.size() > 36), {\"ymd\": \"$datesYmdArray[36]\", \"amount\": \"$datesAmountsArray[36]\"}#end\n#if($datesYmdArray.size() > 37), {\"ymd\": \"$datesYmdArray[37]\", \"amount\": \"$datesAmountsArray[37]\"}#end\n#if($datesYmdArray.size() > 38), {\"ymd\": \"$datesYmdArray[38]\", \"amount\": \"$datesAmountsArray[38]\"}#end\n#if($datesYmdArray.size() > 39), {\"ymd\": \"$datesYmdArray[39]\", \"amount\": \"$datesAmountsArray[39]\"}#end\n#if($datesYmdArray.size() > 40), {\"ymd\": \"$datesYmdArray[40]\", \"amount\": \"$datesAmountsArray[40]\"}#end\n#if($datesYmdArray.size() > 41), {\"ymd\": \"$datesYmdArray[41]\", \"amount\": \"$datesAmountsArray[41]\"}#end\n#if($datesYmdArray.size() > 42), {\"ymd\": \"$datesYmdArray[42]\", \"amount\": \"$datesAmountsArray[42]\"}#end\n#if($datesYmdArray.size() > 43), {\"ymd\": \"$datesYmdArray[43]\", \"amount\": \"$datesAmountsArray[43]\"}#end\n#if($datesYmdArray.size() > 44), {\"ymd\": \"$datesYmdArray[44]\", \"amount\": \"$datesAmountsArray[44]\"}#end\n#if($datesYmdArray.size() > 45), {\"ymd\": \"$datesYmdArray[45]\", \"amount\": \"$datesAmountsArray[45]\"}#end\n#if($datesYmdArray.size() > 46), {\"ymd\": \"$datesYmdArray[46]\", \"amount\": \"$datesAmountsArray[46]\"}#end\n#if($datesYmdArray.size() > 47), {\"ymd\": \"$datesYmdArray[47]\", \"amount\": \"$datesAmountsArray[47]\"}#end\n#if($datesYmdArray.size() > 48), {\"ymd\": \"$datesYmdArray[48]\", \"amount\": \"$datesAmountsArray[48]\"}#end\n#if($datesYmdArray.size() > 49), {\"ymd\": \"$datesYmdArray[49]\", \"amount\": \"$datesAmountsArray[49]\"}#end\n#if($datesYmdArray.size() > 50), {\"ymd\": \"$datesYmdArray[50]\", \"amount\": \"$datesAmountsArray[50]\"}#end\n]}"
+    },
+    "response": {
+      "translationMap": {
+        "value": "$.input.body"
+      },
+      "translationMapDefaults": {},
+      "successTemplate": "{\"value\": $value}"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "title": "Request",
+        "type": "object",
+        "required": [
+          "employeeId",
+          "timeOffTypeId"
+        ],
+        "properties": {
+          "employeeId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "start": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          },
+          "timeOffTypeId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "dates_ymd": {
+            "type": "string"
+          },
+          "dates_amount": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "output": {
+      "successSchema": {
+        "title": "Response",
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
