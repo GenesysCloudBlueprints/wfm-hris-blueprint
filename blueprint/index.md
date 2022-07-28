@@ -121,20 +121,27 @@ NOTE: This step is needed only, if you intend to use provided Workflow and Data 
 ### Create the Integration
 
 - In Genesys Cloud, go to Admin > Integrations > Integrations and install the Integration of type "Web Services Data Actions"
+![Add integration from list](/blueprint/images/integrations_add_list.png)
+![Install integration](/blueprint/images/integrations_install.png)
 - Once properties of new Integration opens
   - In "Details" section you may change the name of your integration
   - Go to "Configuration" tab, "Credentials" section and configure credentials to access HRIS.
+![Integration credentials](/blueprint/images/data_actions_credentails.png)
 
 ### Create Data Actions
 
 Data Actions make JSON API calls to HRIS. Each Data Action is configured for specific API route and is set up to retrieve pass to and retrieve from HRIS specific data.  
 
-Data Action configuration depends on API of specific HRIS. 
+Data Action configuration depends on API of specific HRIS.
 
 - In Genesys Cloud, go to Admin > Integrations > Actions and create or import a new Action
+![Create Action](/blueprint/images/data_actions_create.png)
   - Associate the Action with the Integration created in the previois step
   - Go to "Setup" tab and configure "Contracts" and "Configuration" sections
-    - Note that "Contracts" section has input and output contracts that are going to be used by your workflow.  
+    - Note that "Contracts" section has input and output contracts that are going to be used by your workflow.
+  - Publish Data Action, when completed.
+
+For more information, how to [use Data Actions with web services](https://help.mypurecloud.com/articles/about-web-services-data-actions-integration/) use Genesys resource center.
 
 ### Create Workflows
 
@@ -143,8 +150,10 @@ Five workflows need to be created, one of each type documented above.
 - In Genesys Cloud, go to Admin > Architect
   - New Genesys Cloud Architect tab opens
 - Choose "Workflow" type in "Flows" selector
+![Use Workflow](/blueprint/images/architect_select_workflow.png)
 - "Add" new flow
   - You may import an example, once an empty flow is created
+![Import Workflow](/blueprint/images/architect_import_workflow.png)
 - "Save" and "Publish" the flow, once it is completed
 
 For more information about Architect and flows, use Architect online help. Also, Genesys Resource Center has an article about [working with workflows](https://help.mypurecloud.com/articles/work-with-workflows/)  
