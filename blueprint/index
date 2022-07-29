@@ -1,170 +1,237 @@
-# wfm-hris-blueprint (beta)
+---
+title: BETA Integrate Genesys Cloud with an HRIS system to sync time-off requests and time-off balances from Genesys Cloud WFM
+author: Vidas Placiakis
+indextype: blueprint
+icon: blueprint
+image: images/hris_integration_overview.png
+category: 12
+summary: |
+  This Genesys Cloud Developer Blueprint integrates Genesys Cloud with an HRIS to retrieve employee time-off balances and provide that information in Genesys Cloud workforce management. When a time-off request is created or updated in Genesys Cloud workforce management, the integration inserts the request to the HRIS for tracking and verification against the employee's available balance.
+---
 
-The integration allows Genesys Cloud to get employee time-off balances from HRIS and provide that information in WFM. When time-off request is created or updated in Genesys Cloud WFM, the integration submits the request to HRIS for tracking and verifying against the balance.
+This Genesys Cloud Developer Blueprint integrates Genesys Cloud with an HRIS to retrieve employee time-off balances and provide that information in Genesys Cloud workforce management. When a time-off request is created or updated in Genesys Cloud workforce management, the integration inserts the request to the HRIS for tracking and verification against the employee's available balance.
 
-The integration is congifured and running within Genesys Cloud environment. It is based on Genesys Archtect Flows and uses Genesys Cloud Data Actions to call HRIS APIs
+You configure and run this integration from within your Genesys Cloud organization. The solution uses Architect flows and data actions to sync time-off data with your preferred HRIS. The following image shows an integration with BambooHR.
 
-The beta 1 is intended for testing. The blueprint explains how to configure Flows and Data Actions, so they can be set up and tested before the functionality can be used by Genesys Cloud Workforce Management product. Genesys Cloud Workforce Management will not be using integration functionality withing the scope of beta 1.
+![HRIS integration overview](images/hris_integration_overview.png)
 
-## Solution Components
+## About this Beta 1 solution
 
-- Genesys Cloud - The Genesys cloud-based contact center platform. The following components are used;
-  - Genesys Cloud Integrations and Data Actions
-  - Genesys Cloud Architect
-- 3rd party HRIS, supporting JSON REST API. The integration requires external API access from Genesys Cloud to the HRIS.
+This Genesys Cloud Developer Blueprint is a beta solution that is intended for testing purposes only. The blueprint explains how to configure Architect flows and data actions so that you can set them up and test them within your own Genesys Cloud organization. Genesys Cloud workforce management will use the Architect flows and data actions that you set up in Beta 1 as part of Beta 2.  
 
-## Requirements
+## Solution components
+
+* **Genesys Cloud CX** - A suite of Genesys cloud services for enterprise-grade communications, collaboration, and contact center management. This solution uses Genesys Cloud Architect, integrations and data actions to sync time-off request and time-off balances with the HRIS.
+* **3rd-party HRIS that supports JSON posts to a REST API endpoint** - The integration requires external API access from Genesys Cloud to an HRIS. This blueprint uses BambooHR as an example.
+
+## Prerequisites
 
 ### Specialized knowledge
 
-- Understanding of HRIS time-off sub-system and its API
-- Ability to design and create flows with Genesys Cloud Architect.
-- Understanding of JSON REST API, authentication and Genesys Data Actions.
-- Genesys Cloud API for flows testing through API
+* Experience designing Architect flows
+* Experience using the Genesys Cloud Platform API
+* Experience with REST API authentication
+* Experience with JSON requests
+* An understanding of how to use data actions
+* Experience with the HRIS you use with this solution, including its time-off features and its API
 
 ### HRIS account with API access
 
-HRIS account needs to be configured to provide a limited and secured access to its data through JSON based REST APIs. 
+Configure an HRIS account to provide limited and secured access to its data through JSON-based REST APIs.
 
-- WFM HRIS Integration needs the following API access
-  - Get a list of configured time-off types
-  - Get a list of agents, for whom the integration is intended
-    - Agent unique key or id withing HRIS
-    - Agent email to map with the corresponding agent object instance in Genesys Cloud
-  - Retrieve agent time-off balance on requested dates, for specific time-off types
-  - Insert time-off request for the agent
-  - Modify/delete previously inserted agent time-off request
+The integration with Genesys Cloud workforce management needs sufficient API access to complete the following tasks:
+  * Get a list of configured time-off types
+  * Get a list of agents whose time-off data is synced by the integration
+  * Get an agent-unique key or ID within the HRIS
+  * Map the email address of a user in the HRIS to the corresponding agent in Genesys Cloud
+  * Retrieve the agent time-off balance on requested dates, for specific time-off types
+  * Insert a time-off request for an agent
+  * Modify and delete an agent time-off request that had been previously inserted
 
-### Genesys Cloud account
+### Genesys Cloud account requirements
 
-- A Genesys Cloud license. One of listed below is required
-  - Genesys Cloud CX 3
-  - Genesys Cloud CX 1 WEM Upgrade 2
-  - Genesys Cloud CX 2 WEM Upgrade 1
+* One of the following Genesys Cloud licenses. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing) in the Genesys website.
+  * Genesys Cloud CX 3
+  * Genesys Cloud CX 1 WEM Upgrade 2
+  * Genesys Cloud CX 2 WEM Upgrade 1
+* The Master Admin role in Genesys Cloud. For more information, see [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article") in the Genesys Cloud Resource Center.
 
-For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing) in the Genesys website.
-
-### Genesys Cloud user with appropriate permissions
-
-The user needs appropriate Integrations and Architect permissions.
 For more information, see [Roles and permissions overview](https://help.mypurecloud.com/articles/about-roles-permissions/) in the Genesys Cloud Resource Center.
 
-To test Architect flows using Genesys Cloud API, the user user will need OAuth permissions to setup the client.
+## Solution architecture
 
-## Integration architecture
+This solution is based on Architect flows, which Genesys Cloud workforce management starts. The flows use data actions to get or modify HRIS data. You can also build additional logic in the flows to manipulate HRIS data however you like.
 
-The integration is based on Architect workflows. The execution of those workflows is intended to be started by Genesys Cloud WFM.
-Workflows in turn use one or more Data Actions to communicate with HRIS. Workflow can make multiple invocations of one or more Data Actions to get or modify HRIS data. Flow can also implement additional logic to manipulate the data in desired way.
-Data Actions use credentials stored in Integration configuration to get authorization from HRIS to access specified routed of HRIS JSON REST API.
+Data actions use credentials that are stored in the integration's configuration to get authorization from the HRIS to access the specified route of the HRIS JSON REST API endpoint.
 
-### Flow types
+### Example Architect flows
 
-The integration should have the following flows
+The integration provides the following example Architect flows:
 
-#### Synchronize agents
+* [HRIS-Get-Agent flow](#hris-get-agent-flow "Goes to the HRIS-Get-Agent flow section")
+* [HRIS-Get-Timeoff-Types flow](#hris-get-timeoff-types-flow "Goes to the HRIS-Get-Timeoff-Types section")
+* [HRIS-Get-Balance flow](#hris-get-balance-flow "Goes to the HRIS-Get-Balance flow section")
+* [HRIS-Insert-TimeOff flow](#hris-insert-timeoff-flow "Goes to the HRIS-Insert-TimeOff flow section")
+* [HRIS-Update-TimeOff flow](#hris-update-timeoff-flow "Goes to the HRIS-Update-TimeOff flow section")
 
-The flow gets all agents from HRIS. It needs to get agent HRIS id/key together with their email.
-WFM is supposed to map an agent with a corresponding object in Genesys Cloud based on email and store HRIS agent id for future communications with HRIS to get balances and insert time-off requests.
+:::primary
+**Note** You can update these flows as needed for your specific business purposes.
+:::
 
-This workflow is optional as there are means in WFM to enter HRIS agent id manually.
+### HRIS-Get-Agent flow
 
-**Input:** none
+This flow gets a list of all agent records, including their corresponding IDs/keys and email addresses from the HRIS. Genesys Cloud workforce management requires this data in order to retrieve time-off balances and insert time-off requests for an agent into the HRIS.
 
-**Output:** A list of agents consisting of id and email
+This flow is optional. Alternatively, you could manually enter an agent's ID and email address into Genesys Cloud workforce management.
 
-#### Get Time-off Types
+### HRIS-Get-Timeoff-Types flow
 
-The flow gets all time-off types from HRIS. Time-off type information consists of its id/key, name and optional secondary id.
-WFM will pass this info back to HRIS, when checking agent time-off balance or inserting/modifying time-off request.
-An optional secondary id can be used in integrations, when a single id is not enough to identify time-off type and, say, its accrual rule in HRIS. It can also be used to store any additional information about time-off type that integration chooses.
-If secondary id is returned, WFM will also pass it back to HRIS, when checking agent time-off balance or inserting/modifying time-off request.
+This flow gets a list of all time-off types from the HRIS. Time-off type information consists of its ID/key, name, and an optional secondary ID.
+Genesys Cloud workforce management passes this info back to the HRIS when it checks an agent's time-off balance or when it inserts or modifies a time-off request.
 
-**Input:** none
+You can use the optional secondary ID when a single ID does not sufficiently identify a time-off type and its accrual rule in the HRIS. The optional secondary ID can also store any additional information about the time-off type.
 
-**Output:** A list of time-off types
+If secondary id is returned, Genesys Cloud workforce management also passes it back to the HRIS when it checks an agent's time-off balance or when it inserts or modifies a time-off request.
 
-#### Checking agent time-off balance
+### HRIS-Get-Balance flow
 
-The flow get the time-off balance information for a single agent.
-With one call, it can retrieve balance for multiple time-off type and multiple days.
+This flow gets a list of the time-off balances for an agent. It retrieves balance information for multiple time-off types and multiple days.
 
-**Input:** Agent id, a list of dates and a list of time-off types
+### HRIS-Insert-TimeOff flow
 
-**Output:** A list of balances for dates and time-off types
+This flow gets inserts a new time-off request into the HRIS. The request contains the following information:
 
-#### Inserting new time-off request
+* Agent ID
+* A flag (true/false) to override the balance threshold
+* Earliest time-off request date
+* Latest time-off request date
+* Average amount of time-off minutes (hours) per time-off day
+* List of time-off days containing a date
+* Amount of time-off minutes per day
 
-The flow inserts a new time-off request into HRIS. WFM calls this flow to propagate time-off into into HRIS.
-WFM will propagate only APPROVED time-off requests.
-If agents cannot exceed certain balance thresholds and the flag to override the balance is false, this flow should be checking that threshold as well, for which it may need to invoke a separate Data Action.
+:::primary
+**Note**
+Genesys Cloud workforce management propagates only approved time-off requests.
+:::
 
-**Input:** Agent id, a flag to override the balance, earliest time-off request date, latest time-off request date, average amount of time-off minutes (hours) per time-off day, list of time-off days containing date and an amount of time-off minutes per day.
+If agents cannot exceed certain balance thresholds in the HRIS, and the flag to override the threshold is set to false, this flow should check that threshold as well. In this case, it may need to invoke a separate data action.
 
-**Output:** An id of newly created HRIS time-off request.
+### HRIS-Update-TimeOff flow
 
-#### Updating existing time-off request
+This flow updates an existing time-off record in the HRIS when the corresponding information changes in WFM. The request contains the following information:
 
-The flow updates HRIS time-off information, when previously propagated to HRIS time-off request changes in WFM. The flow is similar to the inserting flow, with the difference that 
+* Agent ID
+* HRIS time-off request ID
+* A flag (true/false) to override the balance threshold
+* New time-off status
+* Earliest time-off request date
+* Latest time-off request date
+* Average amount of time-off minutes (hours) per time-off day
+* List of time-off days containing a date
+* Amount of time-off minutes per day
 
-**Input:** Agent id, HRIS time-off request id, a flag to override the balance, new time-off status, earliest time-off request date, latest time-off date, average amount of time-off minutes (hours) per time-off day, list of time-off days containing date and an amount of time-off minutes per day.
+:::primary
+**Note** In the HRIS, the time-off request ID could change depending on whether the HRIS updates an existing record or replaces it with a new record.
+:::
 
-**Output:** An id of HRIS time-off request. Resulting id could be different that one in the input as flow or HRIS itself may remove old and insert new time-off request.
+### Example data actions
 
-## Deployment Steps
+The integration provides the following example data actions:
 
-### Download the repository containing project files
+* **Bamboo-Get-TimeOff-Types** - This data action gets the list of time off types from the HRIS.
+* **Bamboo-Get-Employees** - Gets the list of employees from the HRIS.
+* **Bamboo-Get-TimeOff-Estimates** - Gets the estimated available time-off balance for an employee in the HRIS.
+* **Bamboo-Put-TimeOff-Request** - Inserts the time-off request from Genesys Cloud into the HRIS. This data action is used by both the ### HRIS-Insert-TimeOff flow and the HRIS-Update-TimeOff flow.
 
-- Clone the repository
+:::primary
+**Note** After you import these data actions into Genesys Cloud, you can update them as needed for your specific business purposes.
+:::
 
-NOTE: This step is needed only, if you intend to use provided Workflow and Data Action examples. The examples are for integration with BambooHR HRIS. If integrating with another HRIS, the examples will require modifications.
+## Implementation steps
 
-### Create the Integration
+### Clone the GitHub repository
 
-- In Genesys Cloud, go to Admin > Integrations > Integrations and install the Integration of type "Web Services Data Actions"
-![Add integration from list](/blueprint/images/integrations_add_list.png)
-![Install integration](/blueprint/images/integrations_install.png)
-- Once properties of new Integration opens
-  - In "Details" section you may change the name of your integration
-  - Go to "Configuration" tab, "Credentials" section and configure credentials to access HRIS.
-![Integration credentials](/blueprint/images/data_actions_credentails.png)
+:::primary
+**Note**: Clone the GitHub repository only if you intend to use the example flows and data actions, which are built to integrate with BambooHR HRIS. If you are integrating with another HRIS, either modify the example files or skip this step entirely and create your own flows and data actions directly in your Genesys Cloud organization.
+:::
 
-### Create Data Actions
+Clone the [wfm-hris-blueprint](https://github.com/GenesysCloudBlueprints/wfm-hris-blueprint) repository to your local machine. The examples folder contains the Architect flows that you can modify as needed.
 
-Data Actions make JSON API calls to HRIS. Each Data Action is configured for specific API route and is set up to retrieve pass to and retrieve from HRIS specific data.  
+### Create the integration
 
-Data Action configuration depends on API of specific HRIS.
+To enable communication from Genesys Cloud to your HRIS, add a web services data actions integration:
 
-- In Genesys Cloud, go to Admin > Integrations > Actions and create or import a new Action
-![Create Action](/blueprint/images/data_actions_create.png)
-  - Associate the Action with the Integration created in the previois step
-  - Go to "Setup" tab and configure "Contracts" and "Configuration" sections
-    - Note that "Contracts" section has input and output contracts that are going to be used by your workflow.
-  - Publish Data Action, when completed.
+1. In Genesys Cloud, navigate to **Admin** > **Integrations** and install a **Web Services Data Actions** integration from Genesys Cloud. For more information, see [About the data actions integrations](https://help.mypurecloud.com/?p=209478 "Opens the data actions overview article") in the Genesys Cloud Resource Center.
 
-For more information, how to [use Data Actions with web services](https://help.mypurecloud.com/articles/about-web-services-data-actions-integration/) use Genesys resource center.
+  ![Web services data actions integration tile](images/integrations_install.png "Web services data actions integration tile")
 
-### Create Workflows
+2. Rename the web services data action and provide a short description.
+3. Click **Configuration** > **Credentials** and then click **Configure**.
 
-Five workflows need to be created, one of each type documented above.
+   ![Configure integration credentials](images/data_actions_credentials.png "Click Configure")
 
-- In Genesys Cloud, go to Admin > Architect
-  - New Genesys Cloud Architect tab opens
-- Choose "Workflow" type in "Flows" selector
-![Use Workflow](/blueprint/images/architect_select_workflow.png)
-- "Add" new flow
-  - You may import an example, once an empty flow is created
-![Import Workflow](/blueprint/images/architect_import_workflow.png)
-- "Save" and "Publish" the flow, once it is completed
+4. From the **Credential Type** list, select **User Defined (OAuth)** and configure the credentials access your HRIS.
+5. Click **Save**.
 
-For more information about Architect and flows, use Architect online help. Also, Genesys Resource Center has an article about [working with workflows](https://help.mypurecloud.com/articles/work-with-workflows/)  
+### Create the data actions
 
-## Testing workflows using Genesys CLoud API
+This solution provides [example data actions](#example-data-actions "Goes to the Example data actions section"). Data actions make JSON API calls to the HRIS. Each data action is configured for a specific API route and exchanges specific HRIS data.
 
-Once workflows are saved and published, they can be tested using Genesys Cloud Public API calls.
-'curl' tool can be used as a client to call API, but there are many other options
+Repeat the following instructions for each of these data actions, or for the new data actions that you create for your HRIS.
 
-- First, the client needs to authenticate and get a bearer token to be able to call an API. Click the link for more information about [API client configuration, authentication and authorization](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code).
-- Use API calls to view, execute flow and get flow execution results. See more information about API on [developer center](https://developer.genesys.cloud/devapps/api-explorer). Select "Architect" category.
-  - GET /api/v2/flows/ - to check the configured flows
-  - POST /api/v2/flows/executions - to pass input parameters and start flow execution
-  - GET /api/v2/flows/executions/{flowExecutionId} - to check flow execution status and get results
+:::primary
+**Note**
+The following instructions illustrate generally how to use the example data actions that are provided with this blueprint solution. Your configuration steps will be specific to your HRIS.
+:::
+
+1. In Genesys Cloud, navigate to **Admin** > **Integrations** > **Actions**.
+2. Do one of the following:
+  * To use an example data action, click **Import**.
+  * To create a new data action, click **Add**.
+
+  ![Create Action](/images/data_actions_create.png)
+3. Select the data action file from your local copy of the repository.
+4. For the Integration name, use the name of the [web services data actions integration that you created in the previous step](#create-the-integration "Goes to the Create the integration section").
+5. In the **Action Name** field, specify a meaningful name.
+6. Click **Setup** and configure the **Contracts** and **Configuration** sections. Note that the **Contracts** section has input and output contracts your flows use.
+7. Click **Publish Data Action**.
+
+For more information, see [About the web services data actions integration](href='https://help.mypurecloud.com/?p=127163' "Goes to the About the web services data actions integration article") in the Genesys Cloud Resource Center.
+
+### Import the Architect flows
+
+This solution provides [example Architect flows](#Example-architect-flows "Goes to the Example Architect flows section"), which you need to import into your Genesys Cloud organization.
+
+:::primary
+**Note**: After you add and import an example flow, you can modify it as necessary.
+:::
+
+1. In Genesys Cloud, navigate to **Admin** > **Architect**.
+2. From the **Flows** list, select Workflow.
+![Select a flow](/images/architect_select_workflow.png "Select a flow")
+3. Click **Add**.
+4. Specify a name and description that correspond to the example flow you are importing.
+![Add a flow](/images/architect_add_workflow.png "Add a flow")
+5. Click **Create**.
+6. Click **Import** and select the example workflow that you are importing.
+![Import a flow](/images/architect_import_workflow.png "Import a flow")
+7. Make any necessary changes.
+8. Save and publish the flows.
+
+For more information, see [About Architect](href='https://help.mypurecloud.com/?p=53682 "Goes to the About Architect article") and [Work with workflows](href='https://help.mypurecloud.com/?p=215071 "Goes to the Work with workflows article") in the Genesys Cloud Resource Center.
+
+## Test the workflows with the Genesys Cloud API
+
+Test your published flows with Genesys Cloud public API calls. You can use curl as a client to call an API, or you can use your preferred method.
+
+1. Authenticate your client and get a bearer token to be able to call an API. For more information, [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code "Goes to the Grant - Authorization Code page").
+2. Use the following API calls to view a flow, execute a flow, and get the execution results:
+  * [GET /api/v2/flows/{flowId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows--flowId-) to check a configured flow
+  * [POST /api/v2/flows/executions](https://developer.genesys.cloud/routing/architect/#post-api-v2-flows-executions) to pass input parameters and start flow execution
+  * [GET /api/v2/flows/executions/{flowExecutionId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows-executions--flowExecutionId-) to check flow execution status and get results
+
+  For more information, go to the [Architect APIs section](https://developer.genesys.cloud/routing/architect/) of the Genesys Cloud API Explorer.
+
+## Additional resources
+
+* [wfm-hris-blueprint repository](https://github.com/GenesysCloudBlueprints/wfm-hris-blueprint) in GitHub
