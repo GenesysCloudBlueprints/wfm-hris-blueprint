@@ -1,0 +1,72 @@
+{
+  "name": "Bamboo-Get-Balance - Exported 2022-07-28 @ 22:18",
+  "integrationType": "custom-rest-actions",
+  "actionType": "custom",
+  "config": {
+    "request": {
+      "requestUrlTemplate": "https://api.bamboohr.com/api/gateway.php/genesystest/v1/employees/${input.employeeId}/time_off/calculator?end=${input.end}",
+      "requestType": "GET",
+      "headers": {
+        "Accept": "application/json"
+      },
+      "requestTemplate": "${input.rawRequest}"
+    },
+    "response": {
+      "translationMap": {},
+      "translationMapDefaults": {},
+      "successTemplate": "{\"values\": ${rawResult}}"
+    }
+  },
+  "contract": {
+    "input": {
+      "inputSchema": {
+        "title": "Request",
+        "type": "object",
+        "properties": {
+          "employeeId": {
+            "type": "string"
+          },
+          "end": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "output": {
+      "successSchema": {
+        "title": "Response",
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "title": "Item",
+              "type": "object",
+              "properties": {
+                "timeOffType": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "balance": {
+                  "type": "string"
+                },
+                "units": {
+                  "type": "string"
+                },
+                "end": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "secure": false
+}
