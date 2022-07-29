@@ -1,5 +1,0 @@
-Action                                            Flow
-Add a Time Off Request (50 days)                  WFM-HR-FLOW-AddTimeOffRequest-VT
-Calculate Balance To Date                         WFM-HR-GetEmployeeBalances
-Get Employee List                                 WFM-HR-FLOW-GetEmployees
-Get Time Off Types 2                              KRN-test-wf
