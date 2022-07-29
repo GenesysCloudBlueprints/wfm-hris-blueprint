@@ -1,1 +1,2 @@
- 
+ Bamboo* files - Action export
+ HRIS* files - Flow export
