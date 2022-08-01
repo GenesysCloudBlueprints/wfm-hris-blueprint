@@ -1,5 +1,5 @@
 {
-  "name": "Bamboo-Get-Balance - Exported 2022-08-01 @ 15:22",
+  "name": "Bamboo-Get-Balance",
   "integrationType": "custom-rest-actions",
   "actionType": "custom",
   "config": {

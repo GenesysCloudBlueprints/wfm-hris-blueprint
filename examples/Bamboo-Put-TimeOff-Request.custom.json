@@ -1,5 +1,5 @@
 {
-  "name": "Bamboo-Put-TimeOff-Request - Exported 2022-08-01 @ 15:22",
+  "name": "Bamboo-Put-TimeOff-Request",
   "integrationType": "custom-rest-actions",
   "actionType": "custom",
   "config": {
