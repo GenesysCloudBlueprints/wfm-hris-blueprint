@@ -68,7 +68,7 @@ Data actions use credentials that are stored in the integration's configuration 
 
 The integration provides the following example Architect flows:
 
-* [HRIS-Get-Agent flow](#hris-get-agent-flow "Goes to the HRIS-Get-Agent flow section")
+* [HRIS-Get-Agents flow](#hris-get-agents-flow "Goes to the HRIS-Get-Agents flow section")
 * [HRIS-Get-Timeoff-Types flow](#hris-get-timeoff-types-flow "Goes to the HRIS-Get-Timeoff-Types section")
 * [HRIS-Get-Balance flow](#hris-get-balance-flow "Goes to the HRIS-Get-Balance flow section")
 * [HRIS-Insert-TimeOff flow](#hris-insert-timeoff-flow "Goes to the HRIS-Insert-TimeOff flow section")
@@ -78,7 +78,7 @@ The integration provides the following example Architect flows:
 **Note** You can update these flows as needed for your specific business purposes.
 :::
 
-### HRIS-Get-Agent flow
+### HRIS-Get-Agents flow
 
 This flow gets a list of all agent records, including their corresponding IDs/keys and email addresses from the HRIS. Genesys Cloud workforce management requires this data in order to retrieve time-off balances and insert time-off requests for an agent into the HRIS.
 
