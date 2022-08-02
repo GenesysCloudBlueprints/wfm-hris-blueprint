@@ -189,7 +189,7 @@ The following instructions illustrate generally how to use the example data acti
   * To use an example data action, click **Import**.
   * To create a new data action, click **Add**.
 
-  ![Create Action](/images/data_actions_create.png)
+  ![Create Action](images/data_actions_create.png)
 3. Select the data action file from your local copy of the repository.
 4. For the Integration name, use the name of the [web services data actions integration that you created in the previous step](#create-the-integration "Goes to the Create the integration section").
 5. In the **Action Name** field, specify a meaningful name.
@@ -208,13 +208,13 @@ This solution provides [example Architect flows](#Example-architect-flows "Goes 
 
 1. In Genesys Cloud, navigate to **Admin** > **Architect**.
 2. From the **Flows** list, select Workflow.
-![Select a flow](/images/architect_select_workflow.png "Select a flow")
+![Select a flow](images/architect_select_workflow.png "Select a flow")
 3. Click **Add**.
 4. Specify a name and description that correspond to the example flow you are importing.
-![Add a flow](/images/architect_add_workflow.png "Add a flow")
+![Add a flow](images/architect_add_workflow.png "Add a flow")
 5. Click **Create**.
 6. Click **Import** and select the example workflow that you are importing.
-![Import a flow](/images/architect_import_workflow.png "Import a flow")
+![Import a flow](images/architect_import_workflow.png "Import a flow")
 7. Make any necessary changes.
 8. Save and publish the flows.
 
