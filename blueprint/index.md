@@ -147,7 +147,7 @@ The integration provides the following example data actions:
 
 * **Bamboo-Get-TimeOff-Types** - This data action gets the list of time off types from the HRIS.
 * **Bamboo-Get-Employees** - Gets the list of employees from the HRIS.
-* **Bamboo-Get-TimeOff-Estimates** - Gets the estimated available time-off balance for an employee in the HRIS.
+* **Bamboo-Get-Balance** - Gets the estimated available time-off balance for an employee in the HRIS. Note that this example is using "v1/employees/110/time_off/calculator" route of bamboohr HRIS, which is returning balance rounded to one decimal point.
 * **Bamboo-Put-TimeOff-Request** - Inserts the time-off request from Genesys Cloud into the HRIS. This data action is used by both the ### HRIS-Insert-TimeOff flow and the HRIS-Update-TimeOff flow.
 
 :::primary
