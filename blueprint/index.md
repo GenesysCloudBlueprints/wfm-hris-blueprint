@@ -55,6 +55,7 @@ The integration with Genesys Cloud workforce management needs sufficient API acc
 
 * One of the following Genesys Cloud licenses. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing) in the Genesys website.
   * Genesys Cloud CX 3
+  * Genesys Cloud CX 3 Digital
   * Genesys Cloud CX 1 WEM Upgrade 2
   * Genesys Cloud CX 2 WEM Upgrade 1
   * Genesys Cloud EX
