@@ -1,5 +1,5 @@
 ---
-title: BETA Integrate Genesys Cloud with an HRIS system to sync time-off requests and time-off balances from Genesys Cloud WFM
+title: Integrate Genesys Cloud with an HRIS system to sync time-off requests and time-off balances from Genesys Cloud WFM
 author: Vidas Placiakis
 indextype: blueprint
 icon: blueprint
@@ -21,10 +21,6 @@ This Genesys Cloud Developer Blueprint integrates Genesys Cloud with an HRIS to 
 You configure and run this integration from within your Genesys Cloud organization. The solution uses Architect flows and data actions to sync time-off data with your preferred HRIS. The following image shows an integration with BambooHR.
 
 ![HRIS integration overview](images/hris_integration_overview.png)
-
-## About this Beta 1 solution
-
-This Genesys Cloud Developer Blueprint is a beta solution that is intended for testing purposes only. The blueprint explains how to configure Architect flows and data actions so that you can set them up and test them within your own Genesys Cloud organization. Genesys Cloud workforce management will use the Architect flows and data actions that you set up in Beta 1 as part of Beta 2.  
 
 ## Solution components
 
@@ -59,15 +55,17 @@ The integration with Genesys Cloud workforce management needs sufficient API acc
 
 * One of the following Genesys Cloud licenses. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing) in the Genesys website.
   * Genesys Cloud CX 3
+  * Genesys Cloud CX 3 Digital
   * Genesys Cloud CX 1 WEM Upgrade 2
   * Genesys Cloud CX 2 WEM Upgrade 1
+  * Genesys Cloud EX
 * The Master Admin role in Genesys Cloud. For more information, see [Roles and permissions overview](https://help.mypurecloud.com/?p=24360 "Opens the Roles and permissions overview article") in the Genesys Cloud Resource Center.
 
 For more information, see [Roles and permissions overview](https://help.mypurecloud.com/articles/about-roles-permissions/) in the Genesys Cloud Resource Center.
 
 ## Solution architecture
 
-This solution is based on Architect flows, which Genesys Cloud workforce management starts. The flows use data actions to get or modify HRIS data. You can also build additional logic in the flows to manipulate HRIS data however you like.
+This solution is based on Architect flows, which are activated by Genesys Cloud Workforce Management application. The flows use data actions to get or modify HRIS data. You can also build additional logic into the flows to manipulate HRIS data however you like.
 
 Data actions use credentials that are stored in the integration's configuration to get authorization from the HRIS to access the specified route of the HRIS JSON REST API endpoint.
 
@@ -89,7 +87,7 @@ The integration provides the following example Architect flows:
 
 This flow gets a list of all agent records, including their corresponding IDs/keys and email addresses from the HRIS. Genesys Cloud workforce management requires this data in order to retrieve time-off balances and insert time-off requests for an agent into the HRIS.
 
-This flow is optional. Alternatively, you could manually enter an agent's ID and email address into Genesys Cloud workforce management.
+This flow is optional. Alternatively, you could manually enter an agent's HRIS ID into Genesys Cloud workforce management.
 
 ### HRIS-Get-Timeoff-Types flow
 
@@ -147,7 +145,7 @@ The integration provides the following example data actions:
 
 * **Bamboo-Get-TimeOff-Types** - This data action gets the list of time off types from the HRIS.
 * **Bamboo-Get-Employees** - Gets the list of employees from the HRIS.
-* **Bamboo-Get-TimeOff-Estimates** - Gets the estimated available time-off balance for an employee in the HRIS.
+* **Bamboo-Get-Balance** - Gets the estimated available time-off balance for an employee in the HRIS. Note that this example is using "v1/employees/{employeeId}/time_off/calculator" route of bamboohr HRIS, which is returning balance rounded to one decimal point.
 * **Bamboo-Put-TimeOff-Request** - Inserts the time-off request from Genesys Cloud into the HRIS. This data action is used by both the ### HRIS-Insert-TimeOff flow and the HRIS-Update-TimeOff flow.
 
 :::primary
@@ -164,7 +162,7 @@ The integration provides the following example data actions:
 
 Clone the [wfm-hris-blueprint](https://github.com/GenesysCloudBlueprints/wfm-hris-blueprint) repository to your local machine. The examples folder contains the Architect flows that you can modify as needed.
 
-### Create the integration
+### Create the integration for data actions
 
 To enable communication from Genesys Cloud to your HRIS, add a web services data actions integration:
 
@@ -172,7 +170,7 @@ To enable communication from Genesys Cloud to your HRIS, add a web services data
 
   ![Web services data actions integration tile](images/integrations_install.png "Web services data actions integration tile")
 
-2. Rename the web services data action and provide a short description.
+2. Rename the web services data action integration and provide a short description.
 3. Click **Configuration** > **Credentials** and then click **Configure**.
 
    ![Configure integration credentials](images/data_actions_credentials.png "Click Configure")
@@ -226,6 +224,14 @@ This solution provides [example Architect flows](#Example-architect-flows "Goes 
 8. Save and publish the flows.
 
 For more information, see [About Architect](href='https://help.mypurecloud.com/?p=53682 "Goes to the About Architect article") and [Work with workflows](href='https://help.mypurecloud.com/?p=215071 "Goes to the Work with workflows article") in the Genesys Cloud Resource Center.
+
+### Create the WFM Time-off HRIS integration
+
+1. In Genesys Cloud, navigate to **Admin** > **Integrations** and install a **WFM Time-off HRIS** integration from Genesys Cloud. 
+2. Rename the  and provide a short description.
+3. Click **Configuration** > **Properties**.
+4. Select previously imported or created workflows for every listed task. 
+5. Click **Save**.
 
 ## Test the workflows with the Genesys Cloud API
 
