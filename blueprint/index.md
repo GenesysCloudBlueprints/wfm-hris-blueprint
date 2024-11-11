@@ -50,7 +50,7 @@ Genesys Cloud workforce management integration needs sufficient API access to co
   * Insert an agent's time-off request 
   * Modify and delete previously inserted agent time-off requests 
 
-### Genesys Cloud account requirements
+### Genesys Cloud account requirements (Test)
 
 * One of the following Genesys Cloud licenses. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the Genesys Cloud Pricing article") in the Genesys website.
   * Genesys Cloud CX 3
