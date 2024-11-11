@@ -50,7 +50,7 @@ Genesys Cloud workforce management integration needs sufficient API access to co
   * Insert an agent's time-off request 
   * Modify and delete previously inserted agent time-off requests 
 
-### Genesys Cloud account requirements (Test)
+### Genesys Cloud account requirements
 
 * One of the following Genesys Cloud licenses. For more information, see [Genesys Cloud Pricing](https://www.genesys.com/pricing "Opens the Genesys Cloud Pricing article") in the Genesys website.
   * Genesys Cloud CX 3
@@ -84,9 +84,19 @@ The integration provides the following examples of Architect flows:
 
 ### HRIS-Get-Agents flow
 
-This HRIS provides a list of all agent records, including their corresponding IDs/keys and email addresses. Genesys Cloud workforce management requires this data to retrieve time-off balances and insert time-off requests for an agent.
+The primary purpose of this workflow is to retrieve the list of agents configured in external HRIS system and that information is used in Genesys's HRIS agent synchronization process that is scheduled to run once every 24 hours.
+This workflow is expected to return a list of emailIds and associated externalIds of the agents from external HRIS system that is to be synchronized with Genesys. 
 
-This flow is optional. Alternatively, you could manually enter an agent's HRIS ID into Genesys Cloud workforce management.
+The email ID of a given agent configured in external HRIS system should match to that of the user defined in Genesys and that is the key based on which the agents in two systems are integrated.
+The flow does not have need a input parameter and the out of the workflow would be a list of emailId and externalId both of which are string data types. Below is a table showing that information.
+
+Note that a workflow variable can only have up to 2000 entries maximum and hence to facilitate that there are 25 bucks of emails and externalIds provided to send up 50K agent details.
+The indexed of additional buckets start from 1 through 24 in addition to the initial bucket. 
+
+The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
+is triggered as part of scheduled agent synchronization process.
+
+![img_1.png](img_1.png)
 
 ### HRIS-Get-Timeoff-Types flow
 
