@@ -251,7 +251,7 @@ For more information, see [About Architect](https://help.mypurecloud.com/?p=5368
 4. Select previously imported or created workflows for every listed task. 
 5. There should be valid workflows selected for all configuration properties. Atached is the screenshot with the selection
 
-![img_2.png](img_2.png)
+![img_2.png](images/wfm_hris_configuration.png)
 
 6. Click **Save**.
 
