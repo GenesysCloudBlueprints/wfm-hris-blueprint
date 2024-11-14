@@ -100,15 +100,18 @@ The indexed of additional buckets start from 1 through 24 in addition to the ini
 The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
 is triggered as part of scheduled agent synchronization process.
 
-| Name              |   Type   |             Data Type              | Notes                                                                                                |
-|:------------------|:-------- |:----------------------------------:|:-----------------------------------------------------------------------------------------------------|
-| Flow.statusCode   | Output   |      HTTP status code <br/>Integer      | Must be set for all workflows                                                                        
-| Flow.status       | Output   |               String               | Must be set for all workflows.<br> Possible values are Running, Error, Terminated, Completed, Failed 
-| Flow.emails       | Output   |            String Array            | Maximum of 2000 strings
-| Flow.externalIds  | Output   |            String Array            | Maximum of 2000 strings 
-| Flow.emails1      | Output   |            String Array            | Next bucket for 2000 emails
-| Flow.externalIds1 | Output   |            String Array            | Next bucket for 2000 externalIds
-
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.emails        | Output |         String Array          | Maximum of 2000 strings                     | Yes       |
+| Flow.externalIds   | Output |         String Array          | Maximum of 2000 strings                     | Yes       |
+| Flow.emails1       | Output |         String Array          | Next bucket for 2000 emails                 | No        |
+| Flow.externalIds1  | Output |         String Array          | Next bucket for 2000 externalIds            | No        |
+| ..                 | ..     |              ..               | ..                                          |           |
+| Flow.emails24      | Output |         String Array          | Next bucket for 2000 emails                 | No        |
+| Flow.externalIds24 | Output |         String Array          | Next bucket for 2000 externalIds            | No        |
 
 ### HRIS-Get-Timeoff-Types flow
 
