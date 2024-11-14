@@ -84,28 +84,30 @@ The integration provides the following examples of Architect flows:
 
 ### HRIS-Get-Agents flow
 
-The primary purpose of this workflow is to retrieve the list of agents configured in external HRIS system and that information is used in Genesys's HRIS agent synchronization process that is scheduled to run once every 24 hours.
+The purpose of this workflow is to to provide unique ids of agents in external HRIS system together with their emails, according to which these agents can be mapped to the user records in Genesys Cloud. 
 
-This workflow is expected to return a list of emailIds and associated externalIds of the agents from external HRIS system that is to be synchronized with Genesys. 
+This workflow is expected to return a list of emailIds and associated externalIds of the agents from external HRIS system that is to be synchronized with Genesys users. 
+
+The number of records in both lists should match. The list order is important as the system will use the order to match elements in list of ids with the list of emails.
 
 The email ID of a given agent configured in external HRIS system should match to that of the user defined in Genesys and that is the key based on which the agents in two systems are integrated.
 
 The flow does not have need a input parameter and the out of the workflow would be a list of emailId and externalId both of which are string data types. Below is a table showing that information.
 
-Note that a workflow variable can only have up to 2000 entries maximum and hence to facilitate that there are 25 bucks of emails and externalIds provided to send up 50K agent details.
+Note that a workflow variable can only have up to 2000 entries maximum and hence to facilitate that there are 25 buckets of emails and externalIds provided to send up 50K agent details.
 The indexed of additional buckets start from 1 through 24 in addition to the initial bucket. 
 
 The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
 is triggered as part of scheduled agent synchronization process.
 
-| Name              |   Type   |  Data Type   | Notes                                                                                                |
-|:------------------|:-------- |:------------:|:-----------------------------------------------------------------------------------------------------|
-| Flow.statusCode   | Output   | HTTP Status  | Must be set for all workflows                                                                        
-| Flow.status       | Output   |    String    | Must be set for all workflows.<br> Possible values are Running, Error, Terminated, Completed, Failed 
-| Flow.emails       | Output   | String Array | Maximum of 2000 strings
-| Flow.externalIds  | Output   |    String    | Maximum of 2000 strings 
-| Flow.emails1      | Output   | String Array | Next bucket for 2000 emails
-| Flow.externalIds1 | Output   |    String    | Next bucket for 2000 externalIds
+| Name              |   Type   |             Data Type              | Notes                                                                                                |
+|:------------------|:-------- |:----------------------------------:|:-----------------------------------------------------------------------------------------------------|
+| Flow.statusCode   | Output   |      HTTP status code <br/>Integer      | Must be set for all workflows                                                                        
+| Flow.status       | Output   |               String               | Must be set for all workflows.<br> Possible values are Running, Error, Terminated, Completed, Failed 
+| Flow.emails       | Output   |            String Array            | Maximum of 2000 strings
+| Flow.externalIds  | Output   |            String Array            | Maximum of 2000 strings 
+| Flow.emails1      | Output   |            String Array            | Next bucket for 2000 emails
+| Flow.externalIds1 | Output   |            String Array            | Next bucket for 2000 externalIds
 
 
 ### HRIS-Get-Timeoff-Types flow
@@ -249,7 +251,7 @@ For more information, see [About Architect](https://help.mypurecloud.com/?p=5368
 2. Rename the integration and provide a short description.
 3. Click **Configuration** > **Properties**.
 4. Select previously imported or created workflows for every listed task. 
-5. There should be valid workflows selected for all configuration properties. Atached is the screenshot with the selection
+5. There should be valid workflows selected for all configuration properties except the agent sync workflow which is optional. Attached is the screenshot with the selection
 
 ![img_2.png](images/wfm_hris_configuration.png)
 
