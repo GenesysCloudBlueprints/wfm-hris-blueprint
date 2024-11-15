@@ -84,9 +84,34 @@ The integration provides the following examples of Architect flows:
 
 ### HRIS-Get-Agents flow
 
-This HRIS provides a list of all agent records, including their corresponding IDs/keys and email addresses. Genesys Cloud workforce management requires this data to retrieve time-off balances and insert time-off requests for an agent.
+The purpose of this workflow is to to provide unique ids of agents in external HRIS system together with their emails, according to which these agents can be mapped to the user records in Genesys Cloud. 
 
-This flow is optional. Alternatively, you could manually enter an agent's HRIS ID into Genesys Cloud workforce management.
+This workflow is expected to return a list of emailIds and associated externalIds of the agents from external HRIS system that is to be synchronized with Genesys users. 
+
+The number of records in both lists should match. The list order is important as the system will use the order to match elements in list of ids with the list of emails.
+
+The email ID of a given agent configured in external HRIS system should match to that of the user defined in Genesys and that is the key based on which the agents in two systems are integrated.
+
+The flow does not have need a input parameter and the out of the workflow would be a list of emailId and externalId both of which are string data types. Below is a table showing that information.
+
+Note that a workflow variable can only have up to 2000 entries maximum and hence to facilitate that there are 25 buckets of emails and externalIds provided to send up 50K agent details.
+The indexed of additional buckets start from 1 through 24 in addition to the initial bucket. 
+
+The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
+is triggered as part of scheduled agent synchronization process.
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.emails        | Output |         String Array          | Maximum of 2000 strings                     | Yes       |
+| Flow.externalIds   | Output |         String Array          | Maximum of 2000 strings                     | Yes       |
+| Flow.emails1       | Output |         String Array          | Next bucket for 2000 emails                 | No        |
+| Flow.externalIds1  | Output |         String Array          | Next bucket for 2000 externalIds            | No        |
+| ..                 | ..     |              ..               | ..                                          |           |
+| Flow.emails24      | Output |         String Array          | Next bucket for 2000 emails                 | No        |
+| Flow.externalIds24 | Output |         String Array          | Next bucket for 2000 externalIds            | No        |
 
 ### HRIS-Get-Timeoff-Types flow
 
@@ -229,7 +254,11 @@ For more information, see [About Architect](https://help.mypurecloud.com/?p=5368
 2. Rename the integration and provide a short description.
 3. Click **Configuration** > **Properties**.
 4. Select previously imported or created workflows for every listed task. 
-5. Click **Save**.
+5. There should be valid workflows selected for all configuration properties except the agent sync workflow which is optional. Attached is the screenshot with the selection
+
+![img_2.png](images/wfm_hris_configuration.png)
+
+6. Click **Save**.
 
 ## Test the workflows with the Genesys Cloud API
 
