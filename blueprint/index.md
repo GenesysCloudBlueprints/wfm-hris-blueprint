@@ -98,7 +98,7 @@ Note that a workflow variable can only have up to 2000 entries maximum and hence
 The indexed of additional buckets start from 1 through 24 in addition to the initial bucket. 
 
 The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
-is triggered as part of scheduled agent synchronization process.
+is triggered as part of scheduled agent synchronization process
 
 | Name               | Type   |           Data Type           | Notes                                       | Mandatory |
 |:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
