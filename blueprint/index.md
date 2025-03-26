@@ -130,7 +130,6 @@ An agent's time-off balances is received in this flow. Multi-day and multi-time-
 This flow inserts a new time-off request into the HRIS. The request contains the following information:
 
 * Agent ID
-* A flag (true/false) to override the balance threshold
 * Earliest time-off request date
 * Latest time-off request date
 * Average amount of time-off minutes (hours) per time-off day
@@ -142,7 +141,6 @@ This flow inserts a new time-off request into the HRIS. The request contains the
 Time-off requests are only propagated if approved by Genesys Cloud workforce management.
 :::
 
-This flow should check if agents cannot exceed certain balance thresholds in the HRIS and the flag to override the threshold is set to false. If this is the case, data actions may have to be invoked separately.
 
 ### HRIS-Update-TimeOff flow
 
@@ -150,13 +148,13 @@ The corresponding information in WFM changes when a time-off record in the HRIS 
 
 * Agent ID
 * HRIS time-off request ID
-* A flag (true/false) to override the balance threshold
 * New time-off status
 * Earliest time-off request date
 * Latest time-off request date
 * Average amount of time-off minutes (hours) per time-off day
 * List of time-off days containing a date
 * Amount of time-off minutes per day
+* Previous time-off id
 
 :::primary
 **Note** HRIS time-off request IDs are updated or replaced based on whether an existing record is updated or replaced.
@@ -264,13 +262,303 @@ For more information, see [About Architect](https://help.mypurecloud.com/?p=5368
 
 Test your published flows with Genesys Cloud public API calls. As a client, you can use curl or your preferred method to call an API.
 
-1. Authenticate your client and get a bearer token to call an API. For more information, [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code "Goes to the Grant - Authorization Code page").
-2. View a flow, execute a flow, and obtain execution results using the following API calls:
-  * [GET /api/v2/flows/{flowId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows--flowId- "Opens the GET /api/v2/flows/{flowId}") to check a configured flow.
-  * [POST /api/v2/flows/executions](https://developer.genesys.cloud/routing/architect/#post-api-v2-flows-executions "Opens the POST /api/v2/flows/executions") to pass input parameters and start flow execution.
-  * [GET /api/v2/flows/executions/{flowExecutionId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows-executions--flowExecutionId- "Opens the GET /api/v2/flows/executions/{flowExecutionId}") to check flow execution status and get results.
+### Authentification
 
-  For more information, see the [Architect APIs](https://developer.genesys.cloud/routing/architect/ "Opens the Architect APIs") in the Genesys Cloud Developer Center.
+Authenticate your client and get a bearer token to call an API. For more information, please reffer to [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code).
+
+### Obtain workflow id
+
+To be able to test, for each imported workflow you'll need it's unique ID. Open published Workflow in Architect and locate Id in your browser address line as shown below:
+![alt text](images/architect_workflow_id.png)
+
+### Trigger workflow execution
+
+Every workflow execution could be triggered by [POST /api/v2/flows/executions](https://developer.genesys.cloud/routing/architect/#post-api-v2-flows-executions "Opens the POST /api/v2/flows/executions"). Below you can find examples of correct requests bodies for each workflow.
+
+As a result of each request, you will recieve individual {flowExecutionId}, which will be used later.
+
+Example output:
+```
+{
+    "id": "{flowExecutionId}",
+    "name": "sample name",
+    "flowVersion": {
+        "id": "1.0",
+        "name": "1.0",
+        "selfUri": "/api/v2/flows/${flow_id}/versions/1.0"
+    },
+    "selfUri": "/api/v2/flows/executions/{flowExecutionId}"
+}
+```
+
+### Get flow execution result
+
+Once {flowExecutionId} is recieved, you can check execution result by sending [GET /api/v2/flows/executions/{flowExecutionId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows-executions--flowExecutionId- "Opens the GET /api/v2/flows/executions/{flowExecutionId}"). This request doesn't require any data or parameters.
+
+### Examples of requests
+
+Below you can find examples of requests and expected results for each sample workflow.
+
+
+#### HRIS-Get-Agents-Flow
+
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_get_agents}",
+  "name": "try_get_agents"
+}
+```
+
+Example of successful execution:
+
+```
+
+    "id": {flowExecutionId},
+    "name": "try_get_agents",
+    "flowVersion": {...}
+    "dateLaunched": "2025-03-26T19:50:17.823Z",
+    "status": "COMPLETED",
+    "dateCompleted": "2025-03-26T19:50:18.529Z",
+    "completionReason": "Success",
+    "outputData": {
+        "Flow.externalIds11": [],
+        "Flow.externalIds10": [],
+        "Flow.externalIds13": [],
+        "Flow.externalIds12": [],
+        "Flow.emails1": [],
+        "Flow.emails2": [],
+        "Flow.emails5": [],
+        "Flow.emails6": [],
+        "Flow.emails3": [],
+        "Flow.emails4": [],
+        "Flow.externalIds19": [],
+        "Flow.externalIds18": [],
+        "Flow.status": "Complete",
+        "Flow.externalIds15": [],
+        "Flow.externalIds14": [],
+        "Flow.externalIds17": [],
+        "Flow.externalIds16": [],
+        "Flow.externalIds3": [],
+        "Flow.externalIds4": [],
+        "Flow.externalIds1": [],
+        "Flow.externalIds2": [],
+        "Flow.externalIds7": [],
+        "Flow.emails9": [],
+        "Flow.externalIds8": [],
+        "Flow.externalIds5": [],
+        "Flow.emails7": [],
+        "Flow.emails8": [],
+        "Flow.externalIds6": [],
+        "Flow.externalIds9": [],
+        "Flow.emails": [
+         "user.one@companydomain.com",
+         "user.two@companydomain.com",
+         "user.three@companydomain.com",
+        ],
+        "Flow.emails24": [],
+        "Flow.emails23": [],
+        "Flow.emails20": [],
+        "Flow.emails22": [],
+        "Flow.emails21": [],
+        "Flow.statusCode": "200",
+        "Flow.emails17": [],
+        "Flow.externalIds22": [],
+        "Flow.externalIds21": [],
+        "Flow.emails16": [],
+        "Flow.emails19": [],
+        "Flow.externalIds24": [],
+        "Flow.emails18": [],
+        "Flow.externalIds23": [],
+        "Flow.emails13": [],
+        "Flow.emails12": [],
+        "Flow.emails15": [],
+        "Flow.externalIds20": [],
+        "Flow.emails14": [],
+        "Flow.emails11": [],
+        "Flow.emails10": [],
+        "Flow.errorMsg": null,
+        "Flow.externalIds": [
+            "313",
+            "332",
+            "452"
+        ]
+    },
+    "selfUri": "/api/v2/flows/executions/{flowExecutionId}"
+}
+```
+
+#### HRIS-Get-Timeoff-Types flow
+
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_get_timeoff_types}",
+  "name": "try_get_timeoff_types"
+}
+```
+
+Example of successful execution:
+```
+{
+    "id": "{flowExecutionId}",
+    "name": "try_get_timeoff_types",
+    "flowVersion": {...}
+    "dateLaunched": "2025-03-26T20:14:38.338Z",
+    "status": "COMPLETED",
+    "dateCompleted": "2025-03-26T20:14:38.905Z",
+    "completionReason": "Success",
+    "outputData": {
+        "Flow.statusCode": "200",
+        "Flow.ids": [
+            "83",
+            "90",
+            "85"
+        ],
+        "Flow.status": "Complete",
+        "Flow.errorMsg": null,
+        "Flow.names": [
+            "Open Time Off",
+            "Study Day",
+            "Budgeted days"
+        ],
+        "Flow.id2s": []
+    },
+    "selfUri": "/api/v2/flows/executions/{flowExecutionId}"
+}
+```
+
+#### HRIS-Get-Balance flow
+
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_get_balance}",
+  "inputData": {
+    "Flow.inputDates": ["2025-06-01"],
+    "Flow.inputTimeOffTypeIds":[
+            "83",
+            "90",
+            "85"
+        ],
+
+    "Flow.agentId": "452"
+    
+  },
+  "name": "try_get_balance"
+}
+```
+Example of successful execution:
+```
+{
+    "id": {flowExecutionId},
+    "name": "try_get_balance",
+    "flowVersion": {...},
+    "dateLaunched": "2025-03-26T20:33:25.890Z",
+    "status": "COMPLETED",
+    "dateCompleted": "2025-03-26T20:33:26.959Z",
+    "completionReason": "Success",
+    "outputData": {
+        "Flow.balanceMinutesPerDay": [
+            "9600",
+            "480"
+        ],
+        "Flow.statusCode": "200",
+        "Flow.timeOffTypeIds": [
+            "83",
+            "84"
+        ],
+        "Flow.timeOffTypeId2s": [],
+        "Flow.status": "Complete",
+        "Flow.errorMsg": null,
+        "Flow.dates": [
+            "2025-06-01",
+            "2025-06-01"
+        ]
+    },
+    "selfUri": "/api/v2/flows/executions/{flowExecutionId}"
+}
+
+```
+
+#### HRIS-Insert-TimeOff flow
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_insert_timeoff}",
+  "inputData": {
+    "Flow.agentId": "452",
+    "Flow.notes": "Testing timeoff",
+    "Flow.dates":["2025-03-29", "2025-03-30", "2025-03-31"],
+    "Flow.minDate": "2025-03-29",
+    "Flow.maxDate" : "2025-03-31",
+    "Flow.timeOffStatus":"APPROVED",
+    "Flow.timeOffTypeId":"83",
+    "Flow.payableMinutes":["480", "480", "480"]
+  },
+  "name": "try_insert_timeoff"
+}
+```
+Example of successful execution:
+```
+{
+    "id": "{flowExecutionId}",
+    "name": "try_insert_timeoff",
+    "flowVersion": {...}
+    "dateLaunched": "2025-03-26T22:13:16.340Z",
+    "status": "COMPLETED",
+    "dateCompleted": "2025-03-26T22:13:17.608Z",
+    "completionReason": "Success",
+    "outputData": {
+        "Flow.timeOffRequestId": "4828",
+        "Flow.statusCode": "200",
+        "Flow.error": null,
+        "Flow.status": "Complete",
+        "Flow.errorMsg": null
+    },
+    "selfUri": "/api/v2/flows/executions/{flowExecutionId}"
+}
+```
+
+#### HRIS-Update-TimeOff flow
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_update_timeoff}",
+  "inputData": {
+    "Flow.agentId": "452",
+    "Flow.notes": "Testing timeoff",
+    "Flow.dates":["2025-03-29", "2025-03-30", "2025-03-31", "2025-04-01"],
+    "Flow.minDate": "2025-03-29",
+    "Flow.maxDate" : "2025-04-01",
+    "Flow.timeOffStatus":"APPROVED",
+    "Flow.timeOffTypeId":"83",
+    "Flow.payableMinutes":["480", "480", "480", "480"],
+    "Flow.inputTimeOffRequestId":"{{previous_timeoff_id}}"
+  },
+  "name": "try_update_timeoff"
+}
+```
+Example of successful execution:
+```
+{
+    "id": "{flowExecutionId}",
+    "name": "try_update_timeoff",
+    "flowVersion": {...}
+    "dateLaunched": "2025-03-26T22:14:27.487Z",
+    "status": "COMPLETED",
+    "dateCompleted": "2025-03-26T22:14:28.847Z",
+    "completionReason": "Success",
+    "outputData": {
+        "Flow.timeOffRequestId": "4829",
+        "Flow.statusCode": "200",
+        "Flow.error": null,
+        "Flow.status": "Complete",
+        "Flow.errorMsg": null
+    },
+    "selfUri": "/api/v2/flows/executions/{flowExecutionId}"
+}
+```
 
 ## Additional resources
 
