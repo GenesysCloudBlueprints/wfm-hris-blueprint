@@ -121,9 +121,32 @@ You can use the optional secondary ID if a single ID does not sufficiently ident
 
 When Genesys Cloud workforce management checks an agent's time-off balance or inserts or modifies a time-off request, it passes the secondary ID back to the HRIS.
 
+Bamboo HRIS doesn't use secondary Ids.
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.ids           | Output |         String Array          | Maximum of 2000 strings                     | Yes       |
+| Flow.names         | Output |         String Array          | Maximum of 2000 strings                     | No        |
+| Flow.id2s          | Outpit |         String Array          | Maximum of 2000 strings                     | No        |
+
+
 ### HRIS-Get-Balance flow
 
 An agent's time-off balances is received in this flow. Multi-day and multi-time-off balance information are retrieved.
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.balanceMinutesPerDay           | Output |         String Array          | Maximum of 2000 strings                     | Yes       |
+| Flow.timeOffTypeIds         | Output |         String Array          | Maximum of 2000 strings                     | Yes        |
+| Flow.dates          | Outpit |         String Array          | Maximum of 2000 strings                     | Yes        |
+
+
 
 ### HRIS-Insert-TimeOff flow
 
@@ -140,6 +163,12 @@ This flow inserts a new time-off request into the HRIS. The request contains the
 **Note**
 Time-off requests are only propagated if approved by Genesys Cloud workforce management.
 :::
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.timeOffRequestId           | Output |         String         | Timeoff request number                    | Yes       |
 
 
 ### HRIS-Update-TimeOff flow
@@ -159,6 +188,13 @@ The corresponding information in WFM changes when a time-off record in the HRIS 
 :::primary
 **Note** HRIS time-off request IDs are updated or replaced based on whether an existing record is updated or replaced.
 :::
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.timeOffRequestId           | Output |         String         | Timeoff request number                    | Yes       |
+
 
 ### Example data actions
 
@@ -322,61 +358,19 @@ Example of successful execution:
     "dateCompleted": "2025-03-26T19:50:18.529Z",
     "completionReason": "Success",
     "outputData": {
-        "Flow.externalIds11": [],
-        "Flow.externalIds10": [],
-        "Flow.externalIds13": [],
-        "Flow.externalIds12": [],
-        "Flow.emails1": [],
-        "Flow.emails2": [],
-        "Flow.emails5": [],
-        "Flow.emails6": [],
-        "Flow.emails3": [],
-        "Flow.emails4": [],
-        "Flow.externalIds19": [],
-        "Flow.externalIds18": [],
         "Flow.status": "Complete",
-        "Flow.externalIds15": [],
-        "Flow.externalIds14": [],
-        "Flow.externalIds17": [],
-        "Flow.externalIds16": [],
-        "Flow.externalIds3": [],
-        "Flow.externalIds4": [],
+        "Flow.statusCode": "200",
         "Flow.externalIds1": [],
+        "Flow.emails1": [],
         "Flow.externalIds2": [],
-        "Flow.externalIds7": [],
-        "Flow.emails9": [],
-        "Flow.externalIds8": [],
-        "Flow.externalIds5": [],
-        "Flow.emails7": [],
-        "Flow.emails8": [],
-        "Flow.externalIds6": [],
-        "Flow.externalIds9": [],
+        "Flow.emails2": [],
+        "Flow.externalIds3": [],
+        "Flow.emails3": [],
         "Flow.emails": [
          "user.one@companydomain.com",
          "user.two@companydomain.com",
          "user.three@companydomain.com",
         ],
-        "Flow.emails24": [],
-        "Flow.emails23": [],
-        "Flow.emails20": [],
-        "Flow.emails22": [],
-        "Flow.emails21": [],
-        "Flow.statusCode": "200",
-        "Flow.emails17": [],
-        "Flow.externalIds22": [],
-        "Flow.externalIds21": [],
-        "Flow.emails16": [],
-        "Flow.emails19": [],
-        "Flow.externalIds24": [],
-        "Flow.emails18": [],
-        "Flow.externalIds23": [],
-        "Flow.emails13": [],
-        "Flow.emails12": [],
-        "Flow.emails15": [],
-        "Flow.externalIds20": [],
-        "Flow.emails14": [],
-        "Flow.emails11": [],
-        "Flow.emails10": [],
         "Flow.errorMsg": null,
         "Flow.externalIds": [
             "313",
