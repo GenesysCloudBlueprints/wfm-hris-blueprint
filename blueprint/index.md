@@ -123,6 +123,7 @@ This flow receives a list of all time-off types from the HRIS. The time-off type
 You can use the optional secondary ID if a single ID does not sufficiently identify a time-off type and its accrual rule in the HRIS. There's also an optional secondary ID that stores additional time-off type information.
 
 When Genesys Cloud workforce management checks an agent's time-off balance or inserts or modifies a time-off request, it passes the secondary ID back to the HRIS.
+
 #### Input
 No specific Input data required.
 
@@ -180,13 +181,13 @@ Time-off requests are only propagated if approved by Genesys Cloud workforce man
 | Name               | Type   |           Data Type           | Notes                                       | Mandatory |
 |:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
 |Flow.agentId        |Input   | String                        | HRIS' agent Id                              | Yes       |
-|Flow.dates          | Input  | String Array                  | Maximum of 2000 strings                     | Yes       |
-|Flow.minDate        | Input  | String                        | Mimimum date in YYYY-MM-DD format           | Yes       |
+|Flow.dates          | Input  | String Array                  | Maximum of 2000 strings, YYYY-MM-DD format  | Yes       |
+|Flow.minDate        | Input  | String                        | Minimum date in YYYY-MM-DD format           | Yes       |
 |Flow.maxDate        | Input  | String                        | Maximum date in YYYY-MM-DD format           | Yes       |
-|Flow.timeOffStatus  | Input  | String                        | "APPPROVED", "PENDING, or "DECLINED"        | Yes       |
+|Flow.timeOffStatus  | Input  | String                        | "APPROVED", "PENDING, or "DECLINED"        | Yes       |
 |Flow.timeOffTypeId  | Input  | String                        | Timeoff type id from HRIS                   | Yes       |
-|Flow.payableMinutes | Input  | String Array                  | Must be align with Flow.dates               | Yes       |
-|Flow.notes          | Input  | String                        | Ptional notes to Timeoff request            | No        |
+|Flow.payableMinutes | Input  | String Array| Number of payable minutes for each date in Flow.dates         | Yes       |
+|Flow.notes          | Input  | String                        | Optional notes for Timeoff request          | No        |
 
 
 #### Output
@@ -220,12 +221,12 @@ The corresponding information in WFM changes when a time-off record in the HRIS 
 |Flow.agentId        |Input   | String                        | HRIS' agent Id                              | Yes       |
 |Flow.inputTimeOffRequestId|Input|String                      | HRIS' Id of timeoff request being updated   | Yes       |
 |Flow.dates          | Input  | String Array                  | Maximum of 2000 strings                     | Yes       |
-|Flow.minDate        | Input  | String                        | Mimimum date in YYYY-MM-DD format           | Yes       |
+|Flow.minDate        | Input  | String                        | Minimum date in YYYY-MM-DD format           | Yes       |
 |Flow.maxDate        | Input  | String                        | Maximum date in YYYY-MM-DD format           | Yes       |
-|Flow.timeOffStatus  | Input  | String                        | "APPPROVED", "PENDING, or "DECLINED"        | Yes       |
+|Flow.timeOffStatus  | Input  | String                        | "APPROVED", "PENDING, or "DECLINED"        | Yes       |
 |Flow.timeOffTypeId  | Input  | String                        | Timeoff type id from HRIS                   | Yes       |
 |Flow.payableMinutes | Input  | String Array                  | Must be align with Flow.dates               | Yes       |
-|Flow.notes          | Input  | String                        | Ptional notes to Timeoff request            | No        |
+|Flow.notes          | Input  | String                        | Optional notes to Timeoff request            | No        |
 
 #### Output
 :::
@@ -339,20 +340,20 @@ For more information, see [About Architect](https://help.mypurecloud.com/?p=5368
 
 Test your published flows with Genesys Cloud public API calls. As a client, you can use curl or your preferred method to call an API.
 
-### Authentification
+### Authentication
 
-Authenticate your client and get a bearer token to call an API. For more information, please reffer to [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code).
+Authenticate your client and get a bearer token to call an API. For more information, please refer to [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code).
 
 ### Obtain workflow id
 
-To be able to test, for each imported workflow you'll need it's unique ID. Open published Workflow in Architect and locate Id in your browser address line as shown below:
+To be able to test, for each imported workflow you'll need its unique ID. Open published Workflow in Architect and locate Id in your browser address line as shown below:
 ![alt text](images/architect_workflow_id.png)
 
 ### Trigger workflow execution
 
 Every workflow execution could be triggered by [POST /api/v2/flows/executions](https://developer.genesys.cloud/routing/architect/#post-api-v2-flows-executions "Opens the POST /api/v2/flows/executions"). Below you can find examples of correct requests bodies for each workflow.
 
-As a result of each request, you will recieve individual {flowExecutionId}, which will be used later.
+As a result of each request, you will receive an individual {flowExecutionId}, which will be used later.
 
 Example output:
 ```
@@ -370,7 +371,7 @@ Example output:
 
 ### Get flow execution result
 
-Once {flowExecutionId} is recieved, you can check execution result by sending [GET /api/v2/flows/executions/{flowExecutionId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows-executions--flowExecutionId- "Opens the GET /api/v2/flows/executions/{flowExecutionId}"). This request doesn't require any data or parameters.
+Once {flowExecutionId} is received, you can check execution result by sending [GET /api/v2/flows/executions/{flowExecutionId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows-executions--flowExecutionId- "Opens the GET /api/v2/flows/executions/{flowExecutionId}"). This request doesn't require any data or parameters.
 
 ### Examples of requests
 
@@ -523,7 +524,7 @@ POST /api/v2/flows/executions
   "flowId": "${flow_id_insert_timeoff}",
   "inputData": {
     "Flow.agentId": "452",
-                                    "Flow.notes": "Testing timeoff",
+    "Flow.notes": "Testing timeoff",
     "Flow.dates":["2025-03-29", "2025-03-30", "2025-03-31"],
     "Flow.minDate": "2025-03-29",
     "Flow.maxDate" : "2025-03-31",
