@@ -338,11 +338,40 @@ For more information, see [About Architect](https://help.mypurecloud.com/?p=5368
 
 ## Test the workflows with the Genesys Cloud API
 
-Test your published flows with Genesys Cloud public API calls. As a client, you can use curl or your preferred method to call an API.
+Test your published flows with Genesys Cloud public API calls.
+
+### Select test tool
+
+There are two most convenient ways to make API calls to Genesys Cloud: Postman and [Genesys Cloud API Explorer](https://developer.genesys.cloud/devapps/api-explorer). Below you'll find an information about both tools usage.
+
+As a client, you can also use your preferred method to call an API, for instance, curl.
+
+#### Use Postman to test workflows
+
+Postman is a popular third-party tool to make REST API requests. Genesys Cloud provides Postman collection among with environment files to simplify. Please, refer to [Genesys Cloud Developer Center - Postman](https://developer.genesys.cloud/platform/api/postman) for detailed information and authentication instructions.
+
+In the sample Git repository, under postman_collection folder, you will find additional small collection, created specifically to test newly imported sample workflows, among with additional environment file. 
+
+#### Use Genesys Cloud API Explorer to test workflows
+
+[API Explorer](https://developer.genesys.cloud/devapps/api-explorer) provides convenient way to test your workflows with built-in authentication. For detailed usage guide, please refer to [API Explorer usage](https://developer.genesys.cloud/devapps/about/api-explorer).
+
+* Click "Account Selection", allow browser storage and select your region. Select "Prompt to login" and login into your Organization.
+* Under Category list in right area of the page, click "Clear all" and select Architect - you'll see list of API endpoints
+* Locate POST to "/api/v2/flows/executions", click it - this is endpoint to trigger workflow execution
+* Disable "Reading mode" toggle
+* Enable "Pro Mode" toggle to switch to raw json input. Click "Load empty schema" and fill it with your values.
+![alt text](images/api-explorer.png)
+* Add values to invoke execution of different workflows
+* You can find examples of "inputData" and other values below in this document, in [Examples of requests](#examples-of-requests) section.
+
 
 ### Authentication
 
-Authenticate your client and get a bearer token to call an API. For more information, please refer to [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code).
+Skip this section if you're using [API Explorer](https://developer.genesys.cloud/devapps/api-explorer).
+For Postman usage, please, refer to [Genesys Cloud Developer Center - Postman](https://developer.genesys.cloud/platform/api/postman)
+
+If you're using some other third-party client, such as curl, authenticate your client and get a bearer token to call an API. For more information, please refer to [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code).
 
 ### Obtain workflow id
 

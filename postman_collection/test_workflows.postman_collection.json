@@ -1,0 +1,512 @@
+{
+	"info": {
+		"_postman_id": "e0d4feec-1d18-43df-99ec-abbff241e0c0",
+		"name": "Blueprint",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25848898"
+	},
+	"item": [
+		{
+			"name": "Get flow by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v2/flows/{{flowId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"flows",
+						"{{flowId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "start flow: put tor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json()",
+							"    var id = jsonData.id",
+							"    pm.environment.set(\"execution_id\", id)",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"flowId\": \"{{flow_id_create_tor}}\",\n  \"inputData\": {\n\n    \"Flow.agentId\": \"{{agentId}}\",\n    \"Flow.notes\": \"Added by postman\",\n    \"Flow.dates\":[\"2025-03-29\", \"2025-03-30\", \"2025-03-31\"],\n    \"Flow.minDate\": \"2025-03-29\",\n    \"Flow.maxDate\" : \"2025-03-31\",\n    \"Flow.timeOffStatus\":\"APPROVED\",\n    \"Flow.timeOffTypeId\":\"83\",\n    \"Flow.payableMinutes\":[\"480\", \"480\", \"480\"]\n    \n  },\n  \"name\": \"try_put_a_tor\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v2/flows/executions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"flows",
+						"executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "start flow: update tor",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json()",
+							"    var id = jsonData.id",
+							"    pm.environment.set(\"execution_id\", id)",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"flowId\": \"{{flow_id_update_timeoff}}\",\n  \"inputData\": {\n\n    \"Flow.agentId\": \"{{agentId}}\",\n    \"Flow.notes\": \"Added by postman\",\n    \"Flow.dates\":[\"2025-03-29\", \"2025-03-30\", \"2025-03-31\", \"2025-04-01\"],\n    \"Flow.minDate\": \"2025-03-29\",\n    \"Flow.maxDate\" : \"2025-04-01\",\n    \"Flow.timeOffStatus\":\"APPROVED\",\n    \"Flow.timeOffTypeId\":\"83\",\n    \"Flow.payableMinutes\":[\"480\", \"480\", \"480\", \"480\"],\n    \"Flow.inputTimeOffRequestId\":\"{{new_tor_id}}\"\n    \n  },\n  \"name\": \"try_update_a_tor\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v2/flows/executions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"flows",
+						"executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "start flow: get timeoff types",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json()",
+							"    var id = jsonData.id",
+							"    pm.environment.set(\"execution_id\", id)",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"flowId\": \"{{flow_id_get_timeoff_types}}\",\n  \"inputData\": {},\n  \"name\": \"try_get_timeoff_types\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v2/flows/executions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"flows",
+						"executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "start flow: get balance",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json()",
+							"    var id = jsonData.id",
+							"    pm.environment.set(\"execution_id\", id)",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"flowId\": \"{{flow_id_get_balance}}\",\n  \"inputData\": {},\n  \"name\": \"try_get_balance\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v2/flows/executions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"flows",
+						"executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "start flow: get agents",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var jsonData = pm.response.json()",
+							"    var id = jsonData.id",
+							"    pm.environment.set(\"execution_id\", id)",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"flowId\": \"{{flow_id_get_agents}}\",\n  \"name\": \"try_get_agents\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/v2/flows/executions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"flows",
+						"executions"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Execution result",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v2/flows/executions/{{execution_id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"flows",
+						"executions",
+						"{{execution_id}}"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "agents",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v2/flows/executions/{{execution_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"flows",
+								"executions",
+								"{{execution_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Mar 2025 19:50:22 GMT"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, must-revalidate"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "ININ-Correlation-Id",
+							"value": "ff56f100-03f1-46fe-910f-22ceba93ddc0"
+						},
+						{
+							"key": "X-Cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 861616284e5d66ba1f9ca00d6183c6c6.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "X-Amz-Cf-Pop",
+							"value": "IAD89-P3"
+						},
+						{
+							"key": "X-Amz-Cf-Id",
+							"value": "_fEhdVI7bv15G94Qpkasx_DDurHfHhboMVSEz4szeNeh30UzZPfzZA=="
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"c86d7654-fff9-41ae-9221-75382da52d9d\",\n    \"name\": \"try_get_agents\",\n    \"flowVersion\": {\n        \"id\": \"1.0\",\n        \"name\": \"1.0\",\n        \"commitVersion\": \"1.0\",\n        \"configurationVersion\": \"2.0\",\n        \"secure\": false,\n        \"debug\": false,\n        \"createdBy\": {\n            \"id\": \"2a883c00-78e7-4538-853e-e017b06bdd67\",\n            \"selfUri\": \"/api/v2/users/2a883c00-78e7-4538-853e-e017b06bdd67\"\n        },\n        \"configurationUri\": \"/api/v2/flows/fd9e4950-3763-4feb-afc0-616ea40eeb7f/versions/1.0/configuration\",\n        \"dateCreated\": 1743004929333,\n        \"dateCheckedIn\": 1743004929345,\n        \"dateSaved\": 1743004927954,\n        \"generationId\": \"WORKFLOW_VERSION_PUBLISHED\",\n        \"inputSchema\": {\n            \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n            \"title\": \"Flow input schema\",\n            \"description\": \"Schema defining flow input parameters.  Property names map to flow scoped variables marked as a flow input.  If you do not supply a property value for an input variable, the variable value will be set to the initial value configured on it in the flow at flow startup.\",\n            \"type\": \"object\",\n            \"properties\": {},\n            \"additionalProperties\": false\n        },\n        \"outputSchema\": {\n            \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n            \"title\": \"Flow output schema\",\n            \"description\": \"Schema defining flow output parameters.  Property names map to flow scoped variables marked as a flow output.\",\n            \"type\": \"object\",\n            \"properties\": {\n                \"Flow.errorMsg\": {\n                    \"description\": \"An error message, if flow execution has not been successful\\n\",\n                    \"$ref\": \"#/definitions/archString\"\n                },\n                \"Flow.statusCode\": {\n                    \"description\": \"A result status code of flow execution. It is based on http return codes. \",\n                    \"$ref\": \"#/definitions/archInteger\"\n                },\n                \"Flow.externalIds\": {\n                    \"description\": \"A result array of HRIS agent ids. The item in 'emails' array with the same index is an agent email corresponding to this id.\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails\": {\n                    \"description\": \"A result array of agent emails. The item in 'externalIds' array with the same index is an agent id corresponding to this email.\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.status\": {\n                    \"description\": \"A return code of the workflow execution. Should be one of {Complete, Error}. Use 'Complete', if data has been retrieved successfully.\",\n                    \"$ref\": \"#/definitions/archString\"\n                },\n                \"Flow.emails1\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds1\": {\n                    \"description\": \"Additional bucket of agent externalIds up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails2\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds2\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails3\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds3\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails4\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds4\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails5\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds5\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails6\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds6\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails7\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds7\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails8\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds8\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails9\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds9\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails10\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds10\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails11\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds11\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails12\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds12\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails13\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds13\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails14\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds14\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails15\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds15\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails16\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds16\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails17\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds17\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails18\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds18\": {\n                    \"description\": \"Additional bucket of agent email ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails19\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds19\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails20\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds20\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails21\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds21\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails22\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds22\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails23\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds23\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.emails24\": {\n                    \"description\": \"Additional bucket of agent emails up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.externalIds24\": {\n                    \"description\": \"Additional bucket of agent external ids up to 2000 items\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                }\n            },\n            \"additionalProperties\": false,\n            \"definitions\": {\n                \"archString\": {\n                    \"archDataTypeId\": \"str\",\n                    \"oneOf\": [\n                        {\n                            \"type\": \"null\",\n                            \"description\": \"A NOT_SET String value.\"\n                        },\n                        {\n                            \"type\": \"string\",\n                            \"maxLength\": 32000,\n                            \"description\": \"A character string.  Examples: \\\"\\\", \\\"Hello\\\", \\\"Just say \\\\\\\"No!\\\\\\\"\\\"\"\n                        }\n                    ]\n                },\n                \"archInteger\": {\n                    \"archDataTypeId\": \"int\",\n                    \"oneOf\": [\n                        {\n                            \"type\": \"null\",\n                            \"description\": \"A NOT_SET Integer value.\"\n                        },\n                        {\n                            \"type\": \"integer\",\n                            \"minimum\": -999999999999999,\n                            \"maximum\": 999999999999999,\n                            \"description\": \"An integral numeric value.  Examples: -3, 0, 1736\"\n                        },\n                        {\n                            \"type\": \"string\",\n                            \"minLength\": 1,\n                            \"maxLength\": 16,\n                            \"description\": \"A string representation of an integral numeric value.  Examples: \\\"157\\\", \\\"-999999999999999\\\"\"\n                        }\n                    ]\n                }\n            }\n        },\n        \"datePublished\": \"2025-03-26T16:02:09.469Z\",\n        \"supportedLanguages\": [\n            {\n                \"language\": \"en-us\",\n                \"isDefault\": true\n            }\n        ],\n        \"selfUri\": \"/api/v2/flows/fd9e4950-3763-4feb-afc0-616ea40eeb7f/versions/1.0\"\n    },\n    \"dateLaunched\": \"2025-03-26T19:50:17.823Z\",\n    \"status\": \"COMPLETED\",\n    \"dateCompleted\": \"2025-03-26T19:50:18.529Z\",\n    \"completionReason\": \"Success\",\n    \"outputData\": {\n        \"Flow.externalIds11\": [],\n        \"Flow.externalIds10\": [],\n        \"Flow.externalIds13\": [],\n        \"Flow.externalIds12\": [],\n        \"Flow.emails1\": [],\n        \"Flow.emails2\": [],\n        \"Flow.emails5\": [],\n        \"Flow.emails6\": [],\n        \"Flow.emails3\": [],\n        \"Flow.emails4\": [],\n        \"Flow.externalIds19\": [],\n        \"Flow.externalIds18\": [],\n        \"Flow.status\": \"Complete\",\n        \"Flow.externalIds15\": [],\n        \"Flow.externalIds14\": [],\n        \"Flow.externalIds17\": [],\n        \"Flow.externalIds16\": [],\n        \"Flow.externalIds3\": [],\n        \"Flow.externalIds4\": [],\n        \"Flow.externalIds1\": [],\n        \"Flow.externalIds2\": [],\n        \"Flow.externalIds7\": [],\n        \"Flow.emails9\": [],\n        \"Flow.externalIds8\": [],\n        \"Flow.externalIds5\": [],\n        \"Flow.emails7\": [],\n        \"Flow.emails8\": [],\n        \"Flow.externalIds6\": [],\n        \"Flow.externalIds9\": [],\n        \"Flow.emails\": [\n            \"HRISTCAsanityga@hris.com\",\n            \"hristestuser@wfm.com\",\n            \"agent7@hris.com\",\n            \"agent8@hr.com\",\n            \"agent11@hris.com\",\n            \"agent12@hris.com\",\n            \"test.agent12.yb@test.com\",\n            \"agent14@hris.com\",\n            \"agents629@fake.com\",\n            \"agents630@domain.com\",\n            \"agents635@domain.com\",\n            \"agents636@domain.com\",\n            \"agents637@domain.com\",\n            \"agents644@domain.com\",\n            \"agents700@domain.com\",\n            \"agents701@domain.com\",\n            \"ravi@wfm-bughunt.com\",\n            \"adesh.nelloreranganathaswamy.admin@wfm-bughunt.com\",\n            \"bruno.salapic.admin@wfm-bughunt.com\",\n            \"caroline.lachance.admin@wfm-bughunt.com\",\n            \"chris.kim.admin@wfm-bughunt.com\",\n            \"christophe.marchadour.admin@wfm-bughunt.com\",\n            \"cindy.wong.admin@wfm-bughunt.com\",\n            \"damaris.scott.admin@wfm-bughunt.com\",\n            \"david.record.admin@wfm-bughunt.com\",\n            \"david.riggleman.admin@wfm-bughunt.com\",\n            \"drew.dyr.admin@wfm-bughunt.com\",\n            \"felix.chung.admin@wfm-bughunt.com\",\n            \"fidel.nunezkanut.admin@wfm-bughunt.com\",\n            \"filip.kosik.admin@wfm-bughunt.com\",\n            \"glory.shashikala.admin@wfm-bughunt.com\",\n            \"haritha.vupputuru.admin@wfm-bughunt.com\",\n            \"jack.bradford.admin@wfm-bughunt.com\",\n            \"jason.mobley.admin@wfm-bughunt.com\",\n            \"ken.tsoi.admin@wfm-bughunt.com\",\n            \"kolaprabhu.tg.admin@wfm-bughunt.com\",\n            \"krishna.raghuraman.admin@wfm-bughunt.com\",\n            \"lisa.johnson.admin@wfm-bughunt.com\",\n            \"michael.jin.admin@wfm-bughunt.com\",\n            \"muthuraja.balagurusamy.admin@wfm-bughunt.com\",\n            \"navin.balasubramani.admin@wfm-bughunt.com\",\n            \"nilesh.patil.admin@wfm-bughunt.com\",\n            \"rabiyama.sathickbatsha.admin@wfm-bughunt.com\",\n            \"rajiv.modanval.admin@wfm-bughunt.com\",\n            \"remi.blanchard.admin@wfm-bughunt.com\",\n            \"roman.kravchenko.admin@wfm-bughunt.com\",\n            \"sandra.mannila.admin@wfm-bughunt.com\",\n            \"takuto.okamoto.admin@wfm-bughunt.com\",\n            \"tetiana.kulish.admin@wfm-bughunt.com\",\n            \"vidas.placiakis.admin@wfm-bughunt.com\",\n            \"yuanfan.wang.admin@wfm-bughunt.com\",\n            \"joysagent1@genesys.com\",\n            \"agent01@test.me\",\n            \"test.agent5.yb@test.com\",\n            \"test.agent11.yb@test.com\",\n            \"test.agent3.yb@test.com\",\n            \"adesh.nelloreranganathaswamy.agent1@wfm-bughunt.com\",\n            \"bruno.salapic.agent1@wfm-bughunt.com\",\n            \"caroline.lachance.agent1@wfm-bughunt.com\",\n            \"chris.kim.agent1@wfm-bughunt.com\",\n            \"christophe.marchadour.agent1@wfm-bughunt.com\",\n            \"cindy.wong.agent1@wfm-bughunt.com\",\n            \"damaris.scott.agent1@wfm-bughunt.com\",\n            \"david.record.agent1@wfm-bughunt.com\",\n            \"david.riggleman.agent1@wfm-bughunt.com\",\n            \"drew.dyr.agent1@wfm-bughunt.com\",\n            \"felix.chung.agent1@wfm-bughunt.com\",\n            \"fidel.nunezkanut.agent1@wfm-bughunt.com\",\n            \"filip.kosik.agent1@wfm-bughunt.com\",\n            \"glory.shashikala.agent1@wfm-bughunt.com\",\n            \"haritha.vupputuru.agent1@wfm-bughunt.com\",\n            \"jack.bradford.agent1@wfm-bughunt.com\",\n            \"jason.mobley.agent1@wfm-bughunt.com\",\n            \"ken.tsoi.agent1@wfm-bughunt.com\",\n            \"kolaprabhu.tg.agent1@wfm-bughunt.com\",\n            \"krishna.raghuraman.agent1@wfm-bughunt.com\",\n            \"lisa.johnson.agent1@wfm-bughunt.com\",\n            \"michael.jin.agent1@wfm-bughunt.com\",\n            \"muthuraja.balagurusamy.agent1@wfm-bughunt.com\",\n            \"navin.balasubramani.agent1@wfm-bughunt.com\",\n            \"nilesh.patil.agent1@wfm-bughunt.com\",\n            \"rabiyama.sathickbatsha.agent1@wfm-bughunt.com\",\n            \"rajiv.modanval.agent1@wfm-bughunt.com\",\n            \"remi.blanchard.agent1@wfm-bughunt.com\",\n            \"roman.kravchenko.agent1@wfm-bughunt.com\",\n            \"sandra.mannila.agent1@wfm-bughunt.com\",\n            \"takuto.okamoto.agent1@wfm-bughunt.com\",\n            \"tetiana.kulish.agent1@wfm-bughunt.com\",\n            \"vidas.placiakis.agent1@wfm-bughunt.com\",\n            \"yuanfan.wang.agent1@wfm-bughunt.com\",\n            \"adesh.nelloreranganathaswamy.agent2@wfm-bughunt.com\",\n            \"bruno.salapic.agent2@wfm-bughunt.com\",\n            \"caroline.lachance.agent2@wfm-bughunt.com\",\n            \"chris.kim.agent2@wfm-bughunt.com\",\n            \"christophe.marchadour.agent2@wfm-bughunt.com\",\n            \"cindy.wong.agent2@wfm-bughunt.com\",\n            \"damaris.scott.agent2@wfm-bughunt.com\",\n            \"david.record.agent2@wfm-bughunt.com\",\n            \"david.riggleman.agent2@wfm-bughunt.com\",\n            \"drew.dyr.agent2@wfm-bughunt.com\",\n            \"felix.chung.agent2@wfm-bughunt.com\",\n            \"fidel.nunezkanut.agent2@wfm-bughunt.com\",\n            \"filip.kosik.agent2@wfm-bughunt.com\",\n            \"glory.shashikala.agent2@wfm-bughunt.com\",\n            \"haritha.vupputuru.agent2@wfm-bughunt.com\",\n            \"jack.bradford.agent2@wfm-bughunt.com\",\n            \"jason.mobley.agent2@wfm-bughunt.com\",\n            \"ken.tsoi.agent2@wfm-bughunt.com\",\n            \"kolaprabhu.tg.agent2@wfm-bughunt.com\",\n            \"krishna.raghuraman.agent2@wfm-bughunt.com\",\n            \"lisa.johnson.agent2@wfm-bughunt.com\",\n            \"michael.jin.agent2@wfm-bughunt.com\",\n            \"muthuraja.balagurusamy.agent2@wfm-bughunt.com\",\n            \"navin.balasubramani.agent2@wfm-bughunt.com\",\n            \"nilesh.patil.agent2@wfm-bughunt.com\",\n            \"rabiyama.sathickbatsha.agent2@wfm-bughunt.com\",\n            \"rajiv.modanval.agent2@wfm-bughunt.com\",\n            \"remi.blanchard.agent2@wfm-bughunt.com\",\n            \"roman.kravchenko.agent2@wfm-bughunt.com\",\n            \"sandra.mannila.agent2@wfm-bughunt.com\",\n            \"takuto.okamoto.agent2@wfm-bughunt.com\",\n            \"tetiana.kulish.agent2@wfm-bughunt.com\",\n            \"vidas.placiakis.agent2@wfm-bughunt.com\",\n            \"yuanfan.wang.agent2@wfm-bughunt.com\",\n            \"sktest3@agent.com\",\n            \"adesh.nelloreranganathaswamy.agent3@wfm-bughunt.com\",\n            \"bruno.salapic.agent3@wfm-bughunt.com\",\n            \"caroline.lachance.agent3@wfm-bughunt.com\",\n            \"chris.kim.agent3@wfm-bughunt.com\",\n            \"christophe.marchadour.agent3@wfm-bughunt.com\",\n            \"cindy.wong.agent3@wfm-bughunt.com\",\n            \"damaris.scott.agent3@wfm-bughunt.com\",\n            \"david.record.agent3@wfm-bughunt.com\",\n            \"david.riggleman.agent3@wfm-bughunt.com\",\n            \"drew.dyr.agent3@wfm-bughunt.com\",\n            \"felix.chung.agent3@wfm-bughunt.com\",\n            \"fidel.nunezkanut.agent3@wfm-bughunt.com\",\n            \"filip.kosik.agent3@wfm-bughunt.com\",\n            \"glory.shashikala.agent3@wfm-bughunt.com\",\n            \"haritha.vupputuru.agent3@wfm-bughunt.com\",\n            \"jack.bradford.agent3@wfm-bughunt.com\",\n            \"jason.mobley.agent3@wfm-bughunt.com\",\n            \"ken.tsoi.agent3@wfm-bughunt.com\",\n            \"kolaprabhu.tg.agent3@wfm-bughunt.com\",\n            \"krishna.raghuraman.agent3@wfm-bughunt.com\",\n            \"lisa.johnson.agent3@wfm-bughunt.com\",\n            \"michael.jin.agent3@wfm-bughunt.com\",\n            \"muthuraja.balagurusamy.agent3@wfm-bughunt.com\",\n            \"navin.balasubramani.agent3@wfm-bughunt.com\",\n            \"nilesh.patil.agent3@wfm-bughunt.com\",\n            \"rabiyama.sathickbatsha.agent3@wfm-bughunt.com\",\n            \"rajiv.modanval.agent3@wfm-bughunt.com\",\n            \"remi.blanchard.agent3@wfm-bughunt.com\",\n            \"roman.kravchenko.agent3@wfm-bughunt.com\",\n            \"sandra.mannila.agent3@wfm-bughunt.com\",\n            \"takuto.okamoto.agent3@wfm-bughunt.com\",\n            \"tetiana.kulish.agent3@wfm-bughunt.com\",\n            \"vidas.placiakis.agent3@wfm-bughunt.com\",\n            \"yuanfan.wang.agent3@wfm-bughunt.com\",\n            \"test.agent4.yb@test.com\",\n            \"test.agent6.yb@test.com\",\n            null,\n            \"test.agent9.yb@test.com\",\n            \"test.agent13.yb@test.com\",\n            \"wem-1044_bughunt_vgohvnsuik@wfm-prerelease-no-analytics.com\",\n            \"Sheetal.Anklesaria2@genesys.com\",\n            \"mary_ann.aque@genesys.com\",\n            \"wem-1044_bughunt_utwkvtbzax@wfm-prerelease-no-analytics.com\",\n            \"Pam.Beesley@mailinator.com\",\n            \"joe.behymer@wfm-bughunt.com\",\n            \"ryan.berg@genesys.com\",\n            \"Andy.Bernard@mailinator.com\",\n            \"remi.blanchard@wfm-bughunt.com\",\n            \"jason.bourne@treadstone.com\",\n            \"jack.bradford@wfm-bughunt.com\",\n            \"jack.bradford.team@wfm-bughunt.com\",\n            \"mitchell.brown@wfm-bughunt.com\",\n            \"robert.bruno@genesys.com\",\n            \"muthuraja.balagurusamy@wfm-bughunt.com\",\n            \"caro@gamil.com\",\n            \"arun.sundar@web.com\",\n            \"mauricio.campos@genesys.com\",\n            \"test.agent10.yb@test.com\",\n            \"michael.carroll@wfm-bughunt.com\",\n            \"wem-1044_bughunt_axgrdjzwcb@wfm-prerelease-no-analytics.com\",\n            \"sean.catlin@wfm-bughunt.com\",\n            \"jackie.chan@genesystest.com\",\n            \"sathya.chandran@wfm-bughunt.com\",\n            \"MappingUser1@user.com\",\n            \"felix.chung@wfm-bughunt.com\",\n            \"WesleyCrusher@mailinator.com\",\n            \"itay.dali@wfm-bughunt.com\",\n            \"commander.data@mailinator.com\",\n            \"agent13@hris.com\",\n            \"Admin@AP.com\",\n            \"haritha_demo@dca.genesys.com\",\n            \"duplicate1@bughunt.com\",\n            \"duplicate3@bughunt.com\",\n            \"thomas.emich@wfm-bughunt.com\",\n            \"charlie.fico@wfm-bughunt.com\",\n            \"Karen.Filippelli@mailinator.com\",\n            \"chris.fivecoate@wfm-bughunt.com\",\n            \"Toby.Flenderson@mailinator.com\",\n            \"abigail.jackson@fakeuser.com\",\n            \"Jim.Halpert@mailinator.com\",\n            \"bradley.hamilton@wfm-bughunt.com\",\n            \"Erin.Hannon@mailinator.com\",\n            \"wem-1044_bughunt_iswqoungdn@wfm-prerelease-no-analytics.com\",\n            \"admin@hri.com\",\n            \"ray@hris.com\",\n            \"uppili.hris@genesystest.com\",\n            \"testhris1@gmail.com\",\n            \"caroline.lachance@wfm.com\",\n            \"kathryn.janeway@mailinator.com\",\n            \"christopher.johnson@wfm-bughunt.com\",\n            \"wem-1044_bughunt_jdptgqgqru@wfm-prerelease-no-analytics.com\",\n            \"Hrishikesh.Khandke@genesys.com\",\n            \"James.T.Kirk@mailinator.com\",\n            \"sam.kirubakar@genesys.com\",\n            \"roman.kravchenko@wfm-bughunt.com\",\n            \"muthu1@gmail.com\",\n            \"wem-1044_bughunt_frcfykyial@wfm-prerelease-no-analytics.com\",\n            \"carolinel@wfm-bu.com\",\n            \"caro.lac@wfm-bu.com\",\n            \"wem-1044_bughunt_wsomqhajwi@wfm-prerelease-no-analytics.com\",\n            \"geordi.laforge@mailinator.com\",\n            \"agentautomap1111@wfmbughunt.com\",\n            \"bruce.lee@genesystest.com\",\n            \"jan.levinson@mailinator.com\",\n            \"jet.li@genesystest.com\",\n            \"ray2@mobile.com\",\n            \"ray_map@hris.com\",\n            \"ray_prod@hris.com\",\n            \"ray3@hris.com\",\n            \"ray1@gc.com\",\n            \"ray.lin@wfm-bughunt.com\",\n            \"ray1@hris.com\",\n            \"dolph.lundgren@genesystest.com\",\n            \"sandra.mannila@wfm-bughunt.com\",\n            \"angela.mao@genesystest.com\",\n            \"automap2@gen.com\",\n            \"automap3@gen.com\",\n            \"automap4@bughunt.com\",\n            \"automap123@bughunt.com\",\n            \"christophe.m@wfm-bughunt.com\",\n            \"andy.maries@genesys.com\",\n            \"mittaln77@gmail.com\",\n            \"jason.mobley@wfm-bughunt.com\",\n            \"wem-1044_bughunt_aqwzyojwak@wfm-prerelease-no-analytics.com\",\n            \"chuck.norris@genesystest.com\",\n            \"aarthi@wfm-bughunt.com\",\n            \"autosyncns1@hris.com\",\n            \"fidel.nunez@wfm-bughunt.com\",\n            null,\n            \"takuto.okamoto@wfm-bughunt.com\",\n            \"nicky.parsons@treadstone.com\",\n            \"nilesh.patil@wfm-bughunt.com\",\n            \"gustavo.peraza@genesys.com\",\n            \"jeanluc.picard@mailinator.com\",\n            \"vidas.placiakis@wfm-bughunt.com\",\n            \"vidas.placiakis@genesys.com\",\n            \"\",\n            \"krishna.raghuraman@wfm-bughunt.com\",\n            \"david.record@wfm-bughunt.com\",\n            \"david.riggleman.team@wfm-bughunt.com\",\n            \"William.T.Riker@mailinator.com\",\n            \"GopibughuntMapping@bug.com\",\n            \"gopinaath.santhanam@wfm-bughunt.com\",\n            \"wem-1044_bughunt_pdjuhstyii@wfm-prerelease-no-analytics.com\",\n            \"julio.santiago@genesys.com\",\n            \"Ambassador.Sarek@mailinator.com\",\n            \"rabiyama.sathickbasha@wfm-bughunt.com\",\n            \"Dwight.Schrute@mailinator.com\",\n            \"lonny.schwartz@genesys.com\",\n            \"beckhansen@genesys.com\",\n            \"damaris.scott@genesys.com\",\n            \"Michael.Scott@mailinator.com\",\n            \"sanjana.seetharam@genesys.com\",\n            \"subburaj.sethuraj@wfm-bughunt.com\",\n            \"Cathy.Simms@mailinator.com\",\n            \"derek.soderstrom@genesys.com\",\n            \"uppili.srinivasan@wfm-bughunt.com\",\n            \"uppili.srinivasan.team@wfm-bughunt.com\",\n            \"caroline.lachance@wfmtca-bughunt.com\",\n            \"caroline.lachance@genesy.com\",\n            \"archana.pavankumar.team@wfm-bughunt.com\",\n            \"CADE@wfm-bu.com\",\n            \"Sharla.Larson@test.com\",\n            \"automaptest@bughunt.com\",\n            \"automapdca1@bughunt.com\",\n            \"automapdca2@bughunt.com\",\n            \"automapprod@wem.com\",\n            \"nsautomap1@test.com\",\n            \"ray.test@genesystest.com\",\n            \"rb_billingtest_esp@genesystesttest.com\",\n            \"kolaprabhu@wfm-bughunt.com\",\n            \"Parthiban.Thangarajan@genesys.com\",\n            \"ksenia.timofeeva@genesys.com\",\n            \"robert.tonyka@genesys.com\",\n            \"brian.trezise@wfm-bughunt.com\",\n            \"Nyota.Uhura@mailinator.com\",\n            \"caro@wfm-unstable.com\",\n            \"bill.dattilio@wem185.com\",\n            \"aarthi.ns@wem185.com\",\n            \"adesh.nellore@wem185.com\",\n            \"adharsh.sandeep@wem185.com\",\n            \"user1@hris.com\",\n            \"jean-claude.vandamme@genesystest.com\",\n            \"kalaimani.vavasi@wfm-bughunt.com\",\n            \"nivetha.vijayan@wfm-bughunt.com\",\n            \"haritha.vupputuru@wfm-bughunt.com\",\n            \"wem-1044_bughunt_rswjmtelpl@wfm-prerelease-no-analytics.com\",\n            \"adesh_web@159.com\",\n            \"tetiana_web@159.com\",\n            \"ray.lin@test.com\",\n            \"ray2@379.com\",\n            \"ray3@379.com\",\n            \"carlton.whitehead@wfm-bughunt.com\",\n            \"Tasha.Yar@mailinator.com\",\n            \"test.agent.yb@test.com\"\n        ],\n        \"Flow.emails24\": [],\n        \"Flow.emails23\": [],\n        \"Flow.emails20\": [],\n        \"Flow.emails22\": [],\n        \"Flow.emails21\": [],\n        \"Flow.statusCode\": \"200\",\n        \"Flow.emails17\": [],\n        \"Flow.externalIds22\": [],\n        \"Flow.externalIds21\": [],\n        \"Flow.emails16\": [],\n        \"Flow.emails19\": [],\n        \"Flow.externalIds24\": [],\n        \"Flow.emails18\": [],\n        \"Flow.externalIds23\": [],\n        \"Flow.emails13\": [],\n        \"Flow.emails12\": [],\n        \"Flow.emails15\": [],\n        \"Flow.externalIds20\": [],\n        \"Flow.emails14\": [],\n        \"Flow.emails11\": [],\n        \"Flow.emails10\": [],\n        \"Flow.errorMsg\": null,\n        \"Flow.externalIds\": [\n            \"313\",\n            \"332\",\n            \"186\",\n            \"187\",\n            \"191\",\n            \"192\",\n            \"174\",\n            \"280\",\n            \"195\",\n            \"194\",\n            \"197\",\n            \"198\",\n            \"199\",\n            \"306\",\n            \"281\",\n            \"282\",\n            \"138\",\n            \"337\",\n            \"341\",\n            \"389\",\n            \"345\",\n            \"203\",\n            \"349\",\n            \"207\",\n            \"211\",\n            \"353\",\n            \"215\",\n            \"219\",\n            \"357\",\n            \"361\",\n            \"223\",\n            \"227\",\n            \"365\",\n            \"369\",\n            \"231\",\n            \"373\",\n            \"235\",\n            \"239\",\n            \"243\",\n            \"377\",\n            \"247\",\n            \"251\",\n            \"381\",\n            \"255\",\n            \"259\",\n            \"263\",\n            \"385\",\n            \"267\",\n            \"271\",\n            \"275\",\n            \"279\",\n            \"330\",\n            \"329\",\n            \"181\",\n            \"176\",\n            \"179\",\n            \"334\",\n            \"338\",\n            \"386\",\n            \"342\",\n            \"200\",\n            \"346\",\n            \"204\",\n            \"208\",\n            \"350\",\n            \"212\",\n            \"216\",\n            \"354\",\n            \"358\",\n            \"220\",\n            \"224\",\n            \"362\",\n            \"366\",\n            \"228\",\n            \"370\",\n            \"232\",\n            \"236\",\n            \"240\",\n            \"374\",\n            \"244\",\n            \"248\",\n            \"378\",\n            \"252\",\n            \"256\",\n            \"260\",\n            \"382\",\n            \"264\",\n            \"268\",\n            \"272\",\n            \"276\",\n            \"335\",\n            \"339\",\n            \"387\",\n            \"343\",\n            \"201\",\n            \"347\",\n            \"205\",\n            \"209\",\n            \"351\",\n            \"213\",\n            \"217\",\n            \"355\",\n            \"359\",\n            \"221\",\n            \"225\",\n            \"363\",\n            \"367\",\n            \"229\",\n            \"371\",\n            \"233\",\n            \"237\",\n            \"241\",\n            \"375\",\n            \"245\",\n            \"249\",\n            \"379\",\n            \"253\",\n            \"257\",\n            \"261\",\n            \"383\",\n            \"265\",\n            \"269\",\n            \"273\",\n            \"277\",\n            \"394\",\n            \"336\",\n            \"340\",\n            \"388\",\n            \"344\",\n            \"202\",\n            \"348\",\n            \"206\",\n            \"210\",\n            \"352\",\n            \"214\",\n            \"218\",\n            \"356\",\n            \"360\",\n            \"222\",\n            \"226\",\n            \"364\",\n            \"368\",\n            \"230\",\n            \"372\",\n            \"234\",\n            \"238\",\n            \"242\",\n            \"376\",\n            \"246\",\n            \"250\",\n            \"380\",\n            \"254\",\n            \"258\",\n            \"262\",\n            \"384\",\n            \"266\",\n            \"270\",\n            \"274\",\n            \"278\",\n            \"180\",\n            \"182\",\n            \"395\",\n            \"177\",\n            \"193\",\n            \"430\",\n            \"435\",\n            \"411\",\n            \"429\",\n            \"437\",\n            \"155\",\n            \"398\",\n            \"445\",\n            \"289\",\n            \"391\",\n            \"129\",\n            \"288\",\n            \"145\",\n            \"405\",\n            \"292\",\n            \"185\",\n            \"326\",\n            \"410\",\n            \"175\",\n            \"146\",\n            \"422\",\n            \"149\",\n            \"112\",\n            \"132\",\n            \"303\",\n            \"126\",\n            \"403\",\n            \"148\",\n            \"316\",\n            \"196\",\n            \"283\",\n            \"407\",\n            \"309\",\n            \"311\",\n            \"131\",\n            \"285\",\n            \"439\",\n            \"139\",\n            \"436\",\n            \"167\",\n            \"440\",\n            \"130\",\n            \"442\",\n            \"425\",\n            \"312\",\n            \"449\",\n            \"161\",\n            \"119\",\n            \"160\",\n            \"318\",\n            \"153\",\n            \"426\",\n            \"189\",\n            \"400\",\n            \"415\",\n            \"159\",\n            \"128\",\n            \"424\",\n            \"183\",\n            \"118\",\n            \"431\",\n            \"315\",\n            \"305\",\n            \"111\",\n            \"441\",\n            \"164\",\n            \"448\",\n            \"421\",\n            \"419\",\n            \"418\",\n            \"447\",\n            \"140\",\n            \"416\",\n            \"114\",\n            \"287\",\n            \"166\",\n            \"302\",\n            \"304\",\n            \"307\",\n            \"308\",\n            \"284\",\n            \"414\",\n            \"188\",\n            \"136\",\n            \"423\",\n            \"110\",\n            \"124\",\n            \"408\",\n            \"295\",\n            \"452\",\n            \"156\",\n            \"328\",\n            \"143\",\n            \"390\",\n            \"317\",\n            \"152\",\n            \"450\",\n            \"163\",\n            \"154\",\n            \"158\",\n            \"286\",\n            \"402\",\n            \"299\",\n            \"122\",\n            \"427\",\n            \"392\",\n            \"399\",\n            \"134\",\n            \"443\",\n            \"393\",\n            \"412\",\n            \"165\",\n            \"438\",\n            \"109\",\n            \"137\",\n            \"444\",\n            \"413\",\n            \"135\",\n            \"290\",\n            \"409\",\n            \"417\",\n            \"294\",\n            \"406\",\n            \"331\",\n            \"300\",\n            \"324\",\n            \"325\",\n            \"319\",\n            \"314\",\n            \"162\",\n            \"397\",\n            \"125\",\n            \"446\",\n            \"451\",\n            \"333\",\n            \"157\",\n            \"401\",\n            \"144\",\n            \"327\",\n            \"322\",\n            \"321\",\n            \"323\",\n            \"173\",\n            \"113\",\n            \"147\",\n            \"142\",\n            \"141\",\n            \"428\",\n            \"291\",\n            \"293\",\n            \"432\",\n            \"433\",\n            \"434\",\n            \"296\",\n            \"404\",\n            \"178\"\n        ]\n    },\n    \"selfUri\": \"/api/v2/flows/executions/c86d7654-fff9-41ae-9221-75382da52d9d\"\n}"
+				},
+				{
+					"name": "timeoff types",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v2/flows/executions/{{execution_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"flows",
+								"executions",
+								"{{execution_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Mar 2025 20:14:44 GMT"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, must-revalidate"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "ININ-Correlation-Id",
+							"value": "02f0ea4f-8431-4107-9dfd-e4fd73353573"
+						},
+						{
+							"key": "X-Cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 861616284e5d66ba1f9ca00d6183c6c6.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "X-Amz-Cf-Pop",
+							"value": "IAD89-P3"
+						},
+						{
+							"key": "X-Amz-Cf-Id",
+							"value": "Up1IV338Iwc7Z8trpb5Jufl2nzt-Wzp3warEVM3bjz3rqnP_GyA0Cg=="
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"77887197-c917-445b-8b17-06b10fbf7c8f\",\n    \"name\": \"try_get_timeoff_types\",\n    \"flowVersion\": {\n        \"id\": \"1.0\",\n        \"name\": \"1.0\",\n        \"commitVersion\": \"1.0\",\n        \"configurationVersion\": \"2.0\",\n        \"secure\": false,\n        \"debug\": false,\n        \"createdBy\": {\n            \"id\": \"2a883c00-78e7-4538-853e-e017b06bdd67\",\n            \"selfUri\": \"/api/v2/users/2a883c00-78e7-4538-853e-e017b06bdd67\"\n        },\n        \"configurationUri\": \"/api/v2/flows/8bac0364-4aa2-4032-b8d9-b5c32bba6a9a/versions/1.0/configuration\",\n        \"dateCreated\": 1743019696843,\n        \"dateCheckedIn\": 1743019696854,\n        \"dateSaved\": 1743019695791,\n        \"generationId\": \"WORKFLOW_VERSION_PUBLISHED\",\n        \"inputSchema\": {\n            \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n            \"title\": \"Flow input schema\",\n            \"description\": \"Schema defining flow input parameters.  Property names map to flow scoped variables marked as a flow input.  If you do not supply a property value for an input variable, the variable value will be set to the initial value configured on it in the flow at flow startup.\",\n            \"type\": \"object\",\n            \"properties\": {},\n            \"additionalProperties\": false\n        },\n        \"outputSchema\": {\n            \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n            \"title\": \"Flow output schema\",\n            \"description\": \"Schema defining flow output parameters.  Property names map to flow scoped variables marked as a flow output.\",\n            \"type\": \"object\",\n            \"properties\": {\n                \"Flow.ids\": {\n                    \"description\": \"An array of time-off type ids\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.id2s\": {\n                    \"description\": \"Additional information to time-off type. It can be used for multiple purposes. Bamboo HR integration does not need it.\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.names\": {\n                    \"description\": \"An array of time-off type names, corresponding to 'ids'.\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.errorMsg\": {\n                    \"description\": \"An error message, if flow execution has not been successful\",\n                    \"$ref\": \"#/definitions/archString\"\n                },\n                \"Flow.statusCode\": {\n                    \"description\": \"Http based return code of flow execution. Use 200 in case of success.\",\n                    \"$ref\": \"#/definitions/archInteger\"\n                },\n                \"Flow.status\": {\n                    \"description\": \"Return code of the workflow execution. Should be one of {Complete, Error}. Use 'Complete', if data was retrieved successfully.\",\n                    \"$ref\": \"#/definitions/archString\"\n                }\n            },\n            \"additionalProperties\": false,\n            \"definitions\": {\n                \"archString\": {\n                    \"archDataTypeId\": \"str\",\n                    \"oneOf\": [\n                        {\n                            \"type\": \"null\",\n                            \"description\": \"A NOT_SET String value.\"\n                        },\n                        {\n                            \"type\": \"string\",\n                            \"maxLength\": 32000,\n                            \"description\": \"A character string.  Examples: \\\"\\\", \\\"Hello\\\", \\\"Just say \\\\\\\"No!\\\\\\\"\\\"\"\n                        }\n                    ]\n                },\n                \"archInteger\": {\n                    \"archDataTypeId\": \"int\",\n                    \"oneOf\": [\n                        {\n                            \"type\": \"null\",\n                            \"description\": \"A NOT_SET Integer value.\"\n                        },\n                        {\n                            \"type\": \"integer\",\n                            \"minimum\": -999999999999999,\n                            \"maximum\": 999999999999999,\n                            \"description\": \"An integral numeric value.  Examples: -3, 0, 1736\"\n                        },\n                        {\n                            \"type\": \"string\",\n                            \"minLength\": 1,\n                            \"maxLength\": 16,\n                            \"description\": \"A string representation of an integral numeric value.  Examples: \\\"157\\\", \\\"-999999999999999\\\"\"\n                        }\n                    ]\n                }\n            }\n        },\n        \"datePublished\": \"2025-03-26T20:08:16.948Z\",\n        \"supportedLanguages\": [\n            {\n                \"language\": \"en-us\",\n                \"isDefault\": true\n            }\n        ],\n        \"selfUri\": \"/api/v2/flows/8bac0364-4aa2-4032-b8d9-b5c32bba6a9a/versions/1.0\"\n    },\n    \"dateLaunched\": \"2025-03-26T20:14:38.338Z\",\n    \"status\": \"COMPLETED\",\n    \"dateCompleted\": \"2025-03-26T20:14:38.905Z\",\n    \"completionReason\": \"Success\",\n    \"outputData\": {\n        \"Flow.statusCode\": \"200\",\n        \"Flow.ids\": [\n            \"83\",\n            \"90\",\n            \"85\",\n            \"96\",\n            \"92\",\n            \"94\",\n            \"88\",\n            \"89\",\n            \"93\",\n            \"84\"\n        ],\n        \"Flow.status\": \"Complete\",\n        \"Flow.errorMsg\": null,\n        \"Flow.names\": [\n            \"Open Time Off\",\n            \"Study Day\",\n            \"Budgeted days\",\n            \"HRIS Timeoff\",\n            \"PS Time off\",\n            \"Sick Day\",\n            \"Silence\",\n            \"Special\",\n            \"Test new cathegory\",\n            \"Volunteering\"\n        ],\n        \"Flow.id2s\": []\n    },\n    \"selfUri\": \"/api/v2/flows/executions/77887197-c917-445b-8b17-06b10fbf7c8f\"\n}"
+				},
+				{
+					"name": "timeoff_balance",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/v2/flows/executions/{{execution_id}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"v2",
+								"flows",
+								"executions",
+								"{{execution_id}}"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Mar 2025 20:33:28 GMT"
+						},
+						{
+							"key": "Strict-Transport-Security",
+							"value": "max-age=31536000; includeSubDomains"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, no-store, must-revalidate"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						},
+						{
+							"key": "ININ-Correlation-Id",
+							"value": "c7104412-b393-4385-9732-46fa1736e97d"
+						},
+						{
+							"key": "X-Cache",
+							"value": "Miss from cloudfront"
+						},
+						{
+							"key": "Via",
+							"value": "1.1 e907cf8941244cce88eeb7bc240528b8.cloudfront.net (CloudFront)"
+						},
+						{
+							"key": "X-Amz-Cf-Pop",
+							"value": "IAD89-P3"
+						},
+						{
+							"key": "X-Amz-Cf-Id",
+							"value": "xD9_UIAHeirLF0febS5n2u2atLo9kRYykkoDtB_klpbkClroGAE8Rg=="
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"id\": \"ea104504-f32d-49e1-89a3-323a8e9caf28\",\n    \"name\": \"try_get_balance\",\n    \"flowVersion\": {\n        \"id\": \"1.0\",\n        \"name\": \"1.0\",\n        \"commitVersion\": \"1.0\",\n        \"configurationVersion\": \"2.0\",\n        \"secure\": false,\n        \"debug\": false,\n        \"createdBy\": {\n            \"id\": \"2a883c00-78e7-4538-853e-e017b06bdd67\",\n            \"selfUri\": \"/api/v2/users/2a883c00-78e7-4538-853e-e017b06bdd67\"\n        },\n        \"configurationUri\": \"/api/v2/flows/cc3883ad-820b-4c3b-adf1-f7f603f898d9/versions/1.0/configuration\",\n        \"dateCreated\": 1743019633245,\n        \"dateCheckedIn\": 1743019633273,\n        \"dateSaved\": 1743019631264,\n        \"generationId\": \"WORKFLOW_VERSION_PUBLISHED\",\n        \"inputSchema\": {\n            \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n            \"title\": \"Flow input schema\",\n            \"description\": \"Schema defining flow input parameters.  Property names map to flow scoped variables marked as a flow input.  If you do not supply a property value for an input variable, the variable value will be set to the initial value configured on it in the flow at flow startup.\",\n            \"type\": \"object\",\n            \"properties\": {\n                \"Flow.inputDates\": {\n                    \"description\": \"An input list of dates, for which agent balance should be requested\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.inputTimeOffTypeIds\": {\n                    \"description\": \"An input list of time-off type ids, for which agent balance should be requested\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.inputTimeOffTypeId2s\": {\n                    \"description\": \"An input list of secondary time-off type ids, for which agent balance should be requested. It is used together with primary time-off type id, if the flow and HRIS needs to.\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.agentId\": {\n                    \"description\": \"An agent id in HRIS, for whom the time-off balance is requested\",\n                    \"$ref\": \"#/definitions/archString\"\n                }\n            },\n            \"additionalProperties\": false,\n            \"definitions\": {\n                \"archString\": {\n                    \"archDataTypeId\": \"str\",\n                    \"oneOf\": [\n                        {\n                            \"type\": \"null\",\n                            \"description\": \"A NOT_SET String value.\"\n                        },\n                        {\n                            \"type\": \"string\",\n                            \"maxLength\": 32000,\n                            \"description\": \"A character string.  Examples: \\\"\\\", \\\"Hello\\\", \\\"Just say \\\\\\\"No!\\\\\\\"\\\"\"\n                        }\n                    ]\n                }\n            }\n        },\n        \"outputSchema\": {\n            \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n            \"title\": \"Flow output schema\",\n            \"description\": \"Schema defining flow output parameters.  Property names map to flow scoped variables marked as a flow output.\",\n            \"type\": \"object\",\n            \"properties\": {\n                \"Flow.errorMsg\": {\n                    \"description\": \"An error message, if flow execution has not been successful\",\n                    \"$ref\": \"#/definitions/archString\"\n                },\n                \"Flow.dates\": {\n                    \"description\": \"An output array, containing dates for time-off balances for every time-off type. The length of this array is always the as 'balanceMinutesPerDay' and 'timeOffTypeIds'. The array should be filled in the manner that accessing the three output lists  - 'balanceMinutesPerDay', 'dates' and 'timeOffTypeIds' - with the same index gives agent balance of time-off type on the date.\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.balanceMinutesPerDay\": {\n                    \"description\": \"An output array, containing time-off balances for every requested date and time-off type. The length of this array is always the as 'dates' and 'timeOffTypeIds'. The array should be filled in the manner that accessing the three output lists  - 'balanceMinutesPerDay', 'dates' and 'timeOffTypeIds' - with the same index gives agent balance of time-off type on the date.\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.statusCode\": {\n                    \"description\": \"A return status code. Http convention is used - 200 for success and etc.\",\n                    \"$ref\": \"#/definitions/archInteger\"\n                },\n                \"Flow.timeOffTypeIds\": {\n                    \"description\": \"An output array, containing time-off types for time-off balances for every date. The length of this array is always the as 'balanceMinutesPerDay' and 'dates'. The array should be filled in the manner that accessing the three output lists  - 'balanceMinutesPerDay', 'dates' and 'timeOffTypeIds' - with the same index gives agent balance of time-off type on the date.\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.timeOffTypeId2s\": {\n                    \"description\": \"An optional output array, containing secondary time-off types for time-off balances for every date. This array is either empty or its length is the same as 'timeOffTypeIds'\",\n                    \"type\": \"array\",\n                    \"maxItems\": 2000,\n                    \"items\": {\n                        \"$ref\": \"#/definitions/archString\"\n                    }\n                },\n                \"Flow.status\": {\n                    \"description\": \"A return code of the workflow execution. Should be one of {Complete, Error}. Use 'Complete', if data has been retrieved successfully.\",\n                    \"$ref\": \"#/definitions/archString\"\n                }\n            },\n            \"additionalProperties\": false,\n            \"definitions\": {\n                \"archString\": {\n                    \"archDataTypeId\": \"str\",\n                    \"oneOf\": [\n                        {\n                            \"type\": \"null\",\n                            \"description\": \"A NOT_SET String value.\"\n                        },\n                        {\n                            \"type\": \"string\",\n                            \"maxLength\": 32000,\n                            \"description\": \"A character string.  Examples: \\\"\\\", \\\"Hello\\\", \\\"Just say \\\\\\\"No!\\\\\\\"\\\"\"\n                        }\n                    ]\n                },\n                \"archInteger\": {\n                    \"archDataTypeId\": \"int\",\n                    \"oneOf\": [\n                        {\n                            \"type\": \"null\",\n                            \"description\": \"A NOT_SET Integer value.\"\n                        },\n                        {\n                            \"type\": \"integer\",\n                            \"minimum\": -999999999999999,\n                            \"maximum\": 999999999999999,\n                            \"description\": \"An integral numeric value.  Examples: -3, 0, 1736\"\n                        },\n                        {\n                            \"type\": \"string\",\n                            \"minLength\": 1,\n                            \"maxLength\": 16,\n                            \"description\": \"A string representation of an integral numeric value.  Examples: \\\"157\\\", \\\"-999999999999999\\\"\"\n                        }\n                    ]\n                }\n            }\n        },\n        \"datePublished\": \"2025-03-26T20:07:13.761Z\",\n        \"supportedLanguages\": [\n            {\n                \"language\": \"en-us\",\n                \"isDefault\": true\n            }\n        ],\n        \"selfUri\": \"/api/v2/flows/cc3883ad-820b-4c3b-adf1-f7f603f898d9/versions/1.0\"\n    },\n    \"dateLaunched\": \"2025-03-26T20:33:25.890Z\",\n    \"status\": \"COMPLETED\",\n    \"dateCompleted\": \"2025-03-26T20:33:26.959Z\",\n    \"completionReason\": \"Success\",\n    \"outputData\": {\n        \"Flow.balanceMinutesPerDay\": [\n            \"9600\",\n            \"480\"\n        ],\n        \"Flow.statusCode\": \"200\",\n        \"Flow.timeOffTypeIds\": [\n            \"85\",\n            \"84\"\n        ],\n        \"Flow.timeOffTypeId2s\": [],\n        \"Flow.status\": \"Complete\",\n        \"Flow.errorMsg\": null,\n        \"Flow.dates\": [\n            \"2025-06-01\",\n            \"2025-06-01\"\n        ]\n    },\n    \"selfUri\": \"/api/v2/flows/executions/ea104504-f32d-49e1-89a3-323a8e9caf28\"\n}"
+				}
+			]
+		}
+	]
+}
