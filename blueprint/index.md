@@ -100,7 +100,7 @@ The indexed of additional buckets start from 1 through 24 in addition to the ini
 The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
 is triggered as part of scheduled agent synchronization process.
 #### Input
-No specific Input data required.
+No input data.
 
 #### Output
 | Name               | Type   |           Data Type           | Notes                                       | Mandatory |
@@ -125,7 +125,7 @@ You can use the optional secondary ID if a single ID does not sufficiently ident
 When Genesys Cloud workforce management checks an agent's time-off balance or inserts or modifies a time-off request, it passes the secondary ID back to the HRIS.
 
 #### Input
-No specific Input data required.
+No input data.
 
 #### Output
 | Name               | Type   |           Data Type           | Notes                                       | Mandatory |
