@@ -147,7 +147,7 @@ An agent's time-off balances is received in this flow. Multi-day and multi-time-
 |:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
 |Flow.inputDates     |Input   | String Array                  | Maximum of 2000 strings                     | Yes       |
 |Flow.inputTimeOffTypeIds|Input| String Array                 | Maximum of 2000 strings                     | Yes       |
-|Flow.agentId        |Input   | String                        | HRIS' agent Id                              | Yes       |
+|Flow.agentId        |Input   | String                        | HRIS' agent Id TODO: //TODO KR                   | Yes       |
 
 #### Output
 | Name               | Type   |           Data Type           | Notes                                       | Mandatory |
