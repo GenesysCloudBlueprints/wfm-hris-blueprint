@@ -82,10 +82,7 @@ The integration provides the following examples of Architect flows:
 **Note** These flows can be updated as needed for your specific business purposes.
 :::
 
-### HRIS-Get-Agents flow
-
-The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
-is triggered as part of scheduled agent synchronization process.
+## <u>HRIS-Get-Agents flow</u>
 
 The purpose of this workflow is to to provide unique ids of agents in external HRIS system together with their emails, according to which these agents can be mapped to the user records in Genesys Cloud. 
 
@@ -100,25 +97,39 @@ The flow does not have need a input parameter and the out of the workflow would 
 Note that a workflow variable can only have up to 2000 entries maximum and hence to facilitate that there are 25 buckets of emails and externalIds provided to send up 50K agent details.
 The indexed of additional buckets start from 1 through 24 in addition to the initial bucket. 
 
+The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
+is triggered as part of scheduled agent synchronization process.
 
-#### Input
+### <u>Flow invocation context and details</u>
+
+The flow is invoked through a scheduler on daily basis (every 24 hours) to ensure any new agents added to external HRIS system is picked up and synced with Genesys. The linkage happens via email configured for a user
+defined in external system. It is imperative that the email used in user definition matches to that of user defnition in Genesys for synchronization to successfully happen. The synchronization begins for an organization
+first time once the very first HRIS integration is activated. The scheduling start time is built with some randomization post integration activation to ensure the load on the processing is evenly
+distributed for all organizations. There is not a way to control and  set a specific time for synchronization to start or trigger one on demand. The synchronization process has smarts built in it to handle failure by
+rescheduling a new job for the failed organization and specific integrations that failed.
+
+### <u>Input</u>
+
 No input data.
 
-#### Output
-| Name               | Type   |           Data Type           | Notes                                          | Mandatory |
-|:-------------------|:-------|:-----------------------------:|:-----------------------------------------------|:----------|
-| Flow.statusCode    | Output | HTTP status code <br/>Integer | 200 on Success, 500 on Error and 408 on Timeout| Yes       |
-| Flow.status        | Output |            String             | Set 'Complete' if success                      | Yes       |
-| Flow.errorMsg      | Output |            String             | Message describing the error if not success    | No        |
-| Flow.emails        | Output |         String Array          | List of employee' email addresses              | Yes       |
-| Flow.externalIds   | Output |         String Array          | Maximum of 2000 strings                        | Yes       |
-| Flow.emails1       | Output |         String Array          | Next bucket for 2000 emails                    | No        |
-| Flow.externalIds1  | Output |         String Array          | Next bucket for 2000 externalIds               | No        |
-| ..                 | ..     |              ..               | ..                                             |           |
-| Flow.emails24      | Output |         String Array          | Next bucket for 2000 emails                    | No        |
-| Flow.externalIds24 | Output |         String Array          | Next bucket for 2000 externalIds               | No        |
 
-### HRIS-Get-Timeoff-Types flow
+
+### <u>Output</u>
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.emails        | Output |         String Array          | Emails configured in external HRIS system matching Genesys user. <br/>  Maximum of 2000 strings   | Yes |
+| Flow.externalIds   | Output |         String Array          | Ids configured in external HRIS system for a matching Genesys user. <br/>Maximum of 2000 strings | Yes |
+| Flow.emails1       | Output |         String Array          | Next bucket for 2000 emails                 | No        |
+| Flow.externalIds1  | Output |         String Array          | Next bucket for 2000 externalIds            | No        |
+| ..                 | ..     |              ..               | ..                                          |           |
+| Flow.emails24      | Output |         String Array          | Next bucket for 2000 emails                 | No        |
+| Flow.externalIds24 | Output |         String Array          | Next bucket for 2000 externalIds            | No        |
+
+## <u>HRIS-Get-Timeoff-Types flow</u>
 
 This flow receives a list of all time-off types from the HRIS. The time-off type consists of an ID/key, a name, and an optional secondary ID. Genesys Cloud workforce management sends this info back to the HRIS when it checks an agent's time-off balance or inserts or modifies time-off requests.
 
@@ -126,118 +137,137 @@ You can use the optional secondary ID if a single ID does not sufficiently ident
 
 When Genesys Cloud workforce management checks an agent's time-off balance or inserts or modifies a time-off request, it passes the secondary ID back to the HRIS.
 
-#### Input
+### <u>Flow invocation context and details</u>
+
+This flow is invoked in workforce management admin interface when creating a time off plan and associating the plan with external HRIS integration. When HRIS integration is chosen, the time off types associated in the external HRIS system is queried
+for the admin to pick an external time off type to map to the given plan and activity codes. 
+
+### <u>Input</u>
+
 No input data.
 
-#### Output
-| Name               | Type   |           Data Type           | Notes                                          | Mandatory |
-|:-------------------|:-------|:-----------------------------:|:-----------------------------------------------|:----------|
-| Flow.statusCode    | Output | HTTP status code <br/>Integer | 200 on Success, 500 on Error and 408 on Timeout| Yes       |
-| Flow.status        | Output |            String             | Set 'Complete' if success                      | Yes       |
-| Flow.errorMsg      | Output |            String             | Message describing the error if not success    | No        |
-| Flow.ids           | Output |         String Array          | List of TimeOff type' IDs from HRIS            | Yes       |
-| Flow.names         | Output |         String Array          | List of TimeOff type' names from HRIS          | No        |
-| Flow.id2s          | Output |         String Array          | List of TimeOff type' secondary IDs from HRIS  | No        |
+
+### <u>Output</u>
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.ids           | Output |         String Array          | Ids of time off types configured in external HRIS system. <br/> Maximum of 2000 strings | Yes  |
+| Flow.names         | Output |         String Array          | Names of time off types configured in external HRIS system. <br/> Count of names must match the ids specified. <br/> Maximum of 2000 strings | Yes  |
+| Flow.id2s          | Output |         String Array          | Secondary Ids of time off types configured in external HRIS system <br/> Maximum of 2000 strings | No |
 
 
-### HRIS-Get-Balance flow
+## <u>HRIS-Get-Balance flow</u>
 
 An agent's time-off balances is received in this flow. Multi-day and multi-time-off balance information are retrieved.
 
-#### Input
-| Name               | Type   |           Data Type           | Notes                                                               | Mandatory |
-|:-------------------|:-------|:-----------------------------:|:--------------------------------------------------------------------|:----------|
-|Flow.inputDates     |Input   | String Array                  | List of dates in format YYYY-MM-DD from timeoff request             | Yes       |
-|Flow.inputTimeOffTypeIds|Input| String Array                 | List of TimeOff type' IDs from HRIS from HRIS-Get-Timeoff-Types flow| Yes       |
-|Flow.agentId        |Input   | String                        | HRIS' agent Id from HRIS-Get-Agents flow                            | Yes       |
+### <u>Flow invocation context and details</u>
 
-#### Output
-| Name                     | Type   |           Data Type           | Notes                                          | Mandatory |
-|:-------------------------|:-------|:-----------------------------:|:-----------------------------------------------|:----------|
-| Flow.statusCode          | Output | HTTP status code <br/>Integer | 200 on Success, 500 on Error and 408 on Timeout| Yes       |
-| Flow.status              | Output |            String             | Set 'Complete' if success                      | Yes       |
-| Flow.errorMsg            | Output |            String             | Message describing the error if not success    | No        |
-| Flow.balanceMinutesPerDay| Output |         String Array          | List of minutes available for each date        | Yes       |
-| Flow.timeOffTypeIds      | Output |         String Array          | List of TimeOff type' names from HRIS          | Yes       |
-| Flow.dates               | Output |         String Array          | List of dates in format YYYY-MM-DD             | Yes       |
-| Flow.timeOffTypeId2s     | Output |         String Array          | List of TimeOff type' secondary IDs from HRIS  | No        |
+This flow is invoked from workorce management admin and agent time off request interfaces. When a time off request is requested, if the user in time off request is associated with a time off plan and the activity code chosen for the request
+is associated with an HRIS integration, this workflow is invoked for time off request dates and external time off types. Dates passed are in YYYY-MM-DD format
+and the balance is returned as of request day(s) for the given time off types.
+
+
+### <u>Input</u>
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+|Flow.inputDates     |Input   | String Array                  | Dates for which time off balance is requested in YYYY-MM-DD format. <br/> Maximum of 2000 strings | Yes       |
+|Flow.inputTimeOffTypeIds|Input| String Array                 | External time off type ids for which time off balance is requested. <br/>Maximum of 2000 strings   | Yes       |
+|Flow.agentId        |Input   | String                        | External HRIS agent Id for which the time off balance is requested. | Yes       |
 
 
 
-### HRIS-Insert-TimeOff flow
+### <u>Output</u>
 
-This flow inserts a new time-off request into the HRIS. The request contains the following information:
-
-* Agent ID
-* Earliest time-off request date
-* Latest time-off request date
-* Average amount of time-off minutes (hours) per time-off day
-* List of time-off days containing a date
-* Amount of time-off minutes per day
-
-:::primary
-**Note**
-Time-off requests are only propagated if approved by Genesys Cloud workforce management.
-:::
-#### Input
-| Name               | Type   |Data Type    | Notes                                                  | Mandatory |
-|:-------------------|:-------|:-----------:|:-------------------------------------------------------|:----------|
-|Flow.agentId        |Input   | String      | HRIS' agent Id from HRIS-Get-Timeoff-Types flow        | Yes       |
-|Flow.dates          | Input  | String Array| List of dates in format YYYY-MM-DD from timeoff request| Yes       |
-|Flow.minDate        | Input  | String      | Minimum date in YYYY-MM-DD format                      | Yes       |
-|Flow.maxDate        | Input  | String      | Maximum date in YYYY-MM-DD format                      | Yes       |
-|Flow.timeOffStatus  | Input  | String      | "APPROVED", "PENDING, or "DECLINED"                    | Yes       |
-|Flow.timeOffTypeId  | Input  | String      | Timeoff type id from HRIS-Get-Timeoff-Types flow       | Yes       |
-|Flow.payableMinutes | Input  | String Array| Number of payable minutes for each date in Flow.dates                    | Yes       |
-|Flow.notes          | Input  | String      | Optional notes for Timeoff request                     | No        |
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.balanceMinutesPerDay| Output |String Array             | Balances in minutes for a given date and external time off type id. <br/>Maximum of 2000 strings   | Yes   |
+| Flow.timeOffTypeIds| Output |         String Array          | External time off type ids for the balances returned. <br>Maximum of 2000 strings  | Yes   |
+| Flow.dates         | Output |         String Array          | Dates in YYYY-MM-DD format for the balances returned. <br>Maximum of 2000 strings   | Yes  |
+| Flow.timeOffTypeId2s|Output |         String Array          | Secondary external time off type ids for the balances returned   | No   |
 
 
-#### Output
 
-| Name                 | Type   |           Data Type           | Notes                                                                                  | Mandatory |
-|:---------------------|:-------|:-----------------------------:|:---------------------------------------------------------------------------------------|:----------|
-| Flow.statusCode      | Output | HTTP status code <br/>Integer | 200 on Success, 500 on Error, 404 if specific TimeOff type not found and 408 on Timeout| Yes       |
-| Flow.status          | Output |            String             | 'Complete', 'InsufficientBalance' or 'Error'                                           | Yes       |
-| Flow.errorMsg        | Output |            String             | Message describing the error if not success                                            | No        |
-| Flow.timeOffRequestId| Output |            String             | Resulting timeoff id in HRIS                                                           | Yes       |
+## <u>HRIS-Insert-TimeOff flow</u>
+
+This flow inserts a new time-off request into the HRIS. On successful insertion and creation of time off on HRIS, the external timeOffRequestId after the creation is returned as output.
+On successfull insertion, Genesys time off request will set to successful synchronization status. If workflow invovation results in an error, then the synchronization status is set to failed status.
 
 
-### HRIS-Update-TimeOff flow
+### <u>Flow invocation context and details</u>
 
-The corresponding information in WFM changes when a time-off record in the HRIS is updated. This request contains the following information:
+This flow is invoked if there is a time off request inserted from admin or agent interface and if user in the request is associated with time off plan and activity code in request is associated with HRIS integration. The workflow is invoked in attempt to synchronize and potentially
+auto approve the request depending on configuration set on the associated time off plan and if there is sufficient balance on dates of time off request
 
-* Agent ID
-* HRIS time-off request ID
-* New time-off status
-* Earliest time-off request date
-* Latest time-off request date
-* Average amount of time-off minutes (hours) per time-off day
-* List of time-off days containing a date
-* Amount of time-off minutes per day
-* Previous time-off id Tets
 
-:::primary
-**Note** HRIS time-off request IDs are updated or replaced based on whether an existing record is updated or replaced.
-| Name                     | Type   |         Data Type           | Notes                                       | Mandatory |
-|:-------------------------|:-------|:---------------------------:|:--------------------------------------------|:----------|
-|Flow.agentId              | Input  | String                      | HRIS' agent Id                              | Yes       |
-|Flow.inputTimeOffRequestId| Input  | String                      | HRIS' Id of timeoff request being updated   | Yes       |
-|Flow.dates                | Input  | String Array                | Maximum of 2000 strings                     | Yes       |
-|Flow.minDate              | Input  | String                      | Minimum date in YYYY-MM-DD format           | Yes       |
-|Flow.maxDate              | Input  | String                      | Maximum date in YYYY-MM-DD format           | Yes       |
-|Flow.timeOffStatus        | Input  | String                      | "APPROVED", "PENDING, or "DECLINED"         | Yes       |
-|Flow.timeOffTypeId        | Input  | String                      | Timeoff type id from HRIS                   | Yes       |
-|Flow.payableMinutes       | Input  | String Array                | Must be align with Flow.dates               | Yes       |
-|Flow.notes                | Input  | String                      | Optional notes to Timeoff request           | No        |
+### <u>Input</u>
 
-#### Output
-:::
-| Name                 | Type   |           Data Type           | Notes                                                                                  | Mandatory |
-|:---------------------|:-------|:-----------------------------:|:---------------------------------------------------------------------------------------|:----------|
-| Flow.statusCode      | Output | HTTP status code <br/>Integer | 200 on Success, 500 on Error, 404 if specific TimeOff type not found and 408 on Timeout| Yes       |
-| Flow.status          | Output |            String             | 'Complete', 'InsufficientBalance' or 'Error'                                           | Yes       |
-| Flow.errorMsg        | Output |            String             | Message describing the error if not success                                            | No        |
-| Flow.timeOffRequestId| Output |            String             | Resulting timeoff id in HRIS                                                           | Yes       |
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+|Flow.agentId        |Input   | String                        | External HRIS agent Id for which the time off request is to be inserted | Yes       |
+|Flow.dates          | Input  | String Array                  | List of dates for which time off is requested. <br/> For case of partial day time off requests, it will be in YYYY-MM-DD format of all the dates spanning the start and end times of the request. <br/> Maximum of 2000 strings | Yes       |
+|Flow.startDateTimes | Input  | String                        | Applicable only to partial dat time off requests. The ISO datetime string in YYYY-MM-DDTHH:mm:ss format | No        |
+|Flow.minDate        | Input  | String                        | Minimum date in YYYY-MM-DD format among spanned dates of time off request           | Yes       |
+|Flow.maxDate        | Input  | String                        | Maximum date in YYYY-MM-DD format among spanned dates of time off request          | Yes       |
+|Flow.timeOffStatus  | Input  | String                        | "APPROVED", "PENDING, "DENIED", "CANCELED"        | Yes       |
+|Flow.timeOffTypeId  | Input  | String                        | External timeoff type id configured in HRIS                   | Yes       |
+|Flow.payableMinutes | Input  | String Array| Payable minutes for each date in spanned dates of time off request         | Yes       |
+|Flow.notes          | Input  | String                        | Optional notes for time off request          | No        |
+
+
+
+
+### <u>Output</u>
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.timeOffRequestId           | Output |         String         | External timeOffRequestId created in HRIS                   | Yes       |
+
+
+## <u>HRIS-Update-TimeOff flow</u>
+
+This flow updates the details of time off request already associated with an external HRIS system. On successfull insertion, Genesys time off request will set to successful synchronization status. If workflow invovation results in an error, then the synchronization status is set to failed status.
+
+
+### <u>Flow invocation context and details</u>
+
+This flow is invoked if there is a time off request inserted from admin or agent interface and if time off request associated with external HRIS system that is synced previously is updated with details or if status changes. For example if a time off request is in synced with external HRIS system and is in
+approved status and now it is changed to denied status, update workflow is invoked to update the external HRIS system to ensure the balances reflect the correct data.
+
+
+### <u>Input</u>
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+|Flow.agentId        |Input   | String                        | External HRIS agent Id for which the time off request is to be inserted | Yes       |
+|Flow.dates          | Input  | String Array                  | List of dates for which time off is requested. <br/> For case of partial day time off requests, it will be in YYYY-MM-DD format of all the dates spanning the start and end times of the request. <br/> Maximum of 2000 strings | Yes       |
+|Flow.startDateTimes | Input  | String                        | Applicable only to partial dat time off requests. The ISO datetime string in YYYY-MM-DDTHH:mm:ss format | No        |
+|Flow.minDate        | Input  | String                        | Minimum date in YYYY-MM-DD format among spanned dates of time off request           | Yes       |
+|Flow.maxDate        | Input  | String                        | Maximum date in YYYY-MM-DD format among spanned dates of time off request          | Yes       |
+|Flow.timeOffStatus  | Input  | String                        | "APPROVED", "PENDING, "DENIED", "CANCELED"        | Yes       |
+|Flow.timeOffTypeId  | Input  | String                        | External timeoff type id configured in HRIS                   | Yes       |
+|Flow.payableMinutes | Input  | String Array| Payable minutes for each date in spanned dates of time off request         | Yes       |
+|Flow.notes          | Input  | String                        | Optional notes for time off request          | No        |
+
+
+
+### <u>Output</u>
+
+| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
+|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
+| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
+| Flow.timeOffRequestId           | Output |         String         | External timeOffRequestId associated in HRIS                   | Yes       |
 
 
 ### Example data actions
