@@ -161,7 +161,7 @@ No input data.
 
 ## <u>HRIS-Get-Balance flow</u>
 
-An agent's time-off balances is received in this flow. Multi-day and multi-time-off balance information are retrieved.
+An agent's time-off balances is received in this flow. This flow retrieves time off balances for all the requested dates and for extternal time off types requested.
 
 ### <u>Flow invocation context and details</u>
 
