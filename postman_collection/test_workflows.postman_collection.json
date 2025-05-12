@@ -7,6 +7,31 @@
 	},
 	"item": [
 		{
+			"name": "fet flows",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/v2/flows?name=\"{{flowName}}\"",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"flows"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "\"{{flowName}}\""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get flow by id",
 			"request": {
 				"method": "GET",
