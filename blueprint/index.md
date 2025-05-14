@@ -383,7 +383,6 @@ As a client, you can also use your preferred method to call an API, for instance
 
 Postman is a popular third-party tool to make REST API requests. Genesys Cloud provides Postman collection among with environment files to simplify. Please, refer to [Genesys Cloud Developer Center - Postman](https://developer.genesys.cloud/platform/api/postman) for detailed information and authentication instructions.
 
-In the sample Git repository, under postman_collection folder, you will find additional small collection, created specifically to test newly imported sample workflows, among with additional environment file. 
 
 #### Use Genesys Cloud API Explorer to test workflows
 
