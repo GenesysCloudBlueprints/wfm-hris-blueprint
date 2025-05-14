@@ -215,7 +215,7 @@ auto approve the request depending on configuration set on the associated time o
 |:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
 |Flow.agentId        |Input   | String                        | External HRIS agent Id for which the time off request is to be inserted | Yes       |
 |Flow.dates          | Input  | String Array                  | List of dates for which time off is requested. <br/> For case of partial day time off requests, it will be in YYYY-MM-DD format of all the dates spanning the start and end times of the request.| Yes       |
-|Flow.startDateTimes | Input  | String                        | Applicable only to partial dat time off requests. The ISO datetime string in YYYY-MM-DDTHH:mm:ss format | No        |
+|Flow.startDateTimes | Input  | String Array                   | Applicable only to partial dat time off requests. The array of ISO datetime string in YYYY-MM-DDTHH:mm:ss format | No        |
 |Flow.minDate        | Input  | String                        | Minimum date in YYYY-MM-DD format among spanned dates of time off request           | Yes       |
 |Flow.maxDate        | Input  | String                        | Maximum date in YYYY-MM-DD format among spanned dates of time off request          | Yes       |
 |Flow.timeOffStatus  | Input  | String                        | "APPROVED", "PENDING, "DENIED", "CANCELED"        | Yes       |
@@ -253,7 +253,7 @@ approved status and now it is changed to denied status, update workflow is invok
 |:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
 |Flow.agentId        |Input   | String                        | External HRIS agent Id for which the time off request is to be inserted | Yes       |
 |Flow.dates          | Input  | String Array                  | List of dates for which time off is requested. <br/> For case of partial day time off requests, it will be in YYYY-MM-DD format of all the dates spanning the start and end times of the request.  | Yes       |
-|Flow.startDateTimes | Input  | String                        | Applicable only to partial dat time off requests. The ISO datetime string in YYYY-MM-DDTHH:mm:ss format | No        |
+|Flow.startDateTimes | Input  | String Array                  | Applicable only to partial dat time off requests. The array of ISO datetime strings in YYYY-MM-DDTHH:mm:ss format | No        |
 |Flow.minDate        | Input  | String                        | Minimum date in YYYY-MM-DD format among spanned dates of time off request           | Yes       |
 |Flow.maxDate        | Input  | String                        | Maximum date in YYYY-MM-DD format among spanned dates of time off request          | Yes       |
 |Flow.timeOffStatus  | Input  | String                        | "APPROVED", "PENDING, "DENIED", "CANCELED"        | Yes       |
