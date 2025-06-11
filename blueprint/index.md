@@ -110,6 +110,9 @@ rescheduling a new job for the failed organization and specific integrations tha
 
 For every string array parameter, maximum length is 2000 strings.
 
+Possible values of Flow.status variables are Unknown, Complete, InsufficientBalance, NotAllowed and Error. Setting Flow.statusCode of 200 will ensure the time off request is synced with external system. For a status of Complete,
+it will have to be set to 200. For InsufficientBalanceit is recommended to set the status to 200 to ensure sync status will not result in an error and to set InsufficientBalance as sub status of time off request.
+
 ### Input
 
 No input data.
