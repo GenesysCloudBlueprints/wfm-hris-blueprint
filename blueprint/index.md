@@ -82,49 +82,36 @@ The integration provides the following examples of Architect flows:
 **Note** These flows can be updated as needed for your specific business purposes.
 :::
 
-## HRIS-Get-Agents flow
+## HRIS-Get-Agents workflow
 
-The purpose of this workflow is to to provide unique ids of agents in external HRIS system together with their emails, according to which these agents can be mapped to the user records in Genesys Cloud. 
+This workflow retrieves unique agent IDs and email addresses from an external HRIS system. The email address in the HRIS system must exactly match the email address defined in the corresponding Genesys Cloud user record. Using the email address, Genesys Cloud matches each user record with its associated external HRIS ID. Genesys Cloud then uses this external ID as an input parameter when invoking workflows to retrieve agent time-off balances or to create or update time-off requests.
 
-This workflow is expected to return a list of emailIds and associated externalIds of the agents from external HRIS system that is to be synchronized with Genesys users. 
+The workflow is expected to retrieve all agents associated with the integration each time it runs. If an agent previously associated with an integration is not returned in a subsequent run, Genesys Cloud will remove the association and clear the external ID for that agent.
 
-The number of records in both lists should match. The list order is important as the system will use the order to match elements in list of ids with the list of emails.
+This workflow is optional. External agent IDs can also be set manually using the Genesys Cloud UI or API.
 
-The email ID of a given agent configured in external HRIS system should match to that of the user defined in Genesys and that is the key based on which the agents in two systems are integrated.
+### Invocation
 
-The flow does not have need a input parameter and the out of the workflow would be a list of emailId and externalId both of which are string data types. Below is a table showing that information.
+If automatic synchronization is enabled in configuration, the workflow runs every 24 hours to synchronize agents newly added in the external HRIS system with Genesys Cloud.
 
-Note that a workflow variable can only have up to 2000 entries maximum and hence to facilitate that there are 25 buckets of emails and externalIds provided to send up 50K agent details.
-The indexed of additional buckets start from 1 through 24 in addition to the initial bucket. 
+The workflow runs for the first time shortly after the initial HRIS integration is activated for an organization. From that point forward, all “Get Agents” workflows across integrations for the organization run on the same 24-hour schedule, with their start time based on the first activation timestamp.
 
-The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
-is triggered as part of scheduled agent synchronization process.
-
-### Flow invocation context and details
-
-The flow is invoked as a recurring job on daily basis (every 24 hours) to ensure any new agents added to external HRIS system is picked up and synced with Genesys. The linkage happens via email configured for a user
-defined in external system. It is imperative that the email used in user definition matches to that of user defnition in Genesys for synchronization to successfully happen. The synchronization begins for an organization
-first time once the very first HRIS integration is activated. The scheduling start time is built with some randomization post integration activation to ensure the load on the processing is evenly
-distributed for all organizations. There is not a way to control and  set a specific time for synchronization to start or trigger one on demand. The synchronization process has smarts built in it to handle failure by
-rescheduling a new job for the failed organization and specific integrations that failed.
-
-For every string array parameter, maximum length is 2000 strings.
-
-Possible values of Flow.status variables are Unknown, Complete, InsufficientBalance, NotAllowed and Error. Setting Flow.statusCode of 200 will ensure the time off request is synced with external system. For a status of Complete,
-it will have to be set to 200. For InsufficientBalanceit is recommended to set the status to 200 to ensure sync status will not result in an error and to set InsufficientBalance as sub status of time off request.
+Manual triggering or scheduling of synchronization is not supported.
 
 ### Input
 
-No input data.
-
-
+Genesys Cloud does not pass any input parameters to this workflow.
 
 ### Output
 
+Workflow output includes two string arrays — emails and externalIds — each with a maximum of 2,000 entries. To support up to 50,000 agents, the output includes 25 buckets for each array (emails through emails24, and externalIds through externalIds24).
+
+Each pair of arrays in the same bucket must contain the same number of entries, and their order must align to ensure correct matching of email addresses with external IDs.
+
 | Name               | Type   |           Data Type           | Notes                                       | Mandatory |
 |:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
-| Flow.statusCode    | Output | HTTP status code <br/>Integer | 200 on Success, 500 on Error and 408 on Timeout| Yes       |
-| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
+| Flow.statusCode    | Output | HTTP status code <br/>Integer | 200 on Success, 500 on Error | Yes       |
+| Flow.status        | Output |            String             | If execution successful, set to 'Complete'. Otherwise, 'Error' | Yes       |
 | Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
 | Flow.emails        | Output |         String Array          | Emails configured in external HRIS system matching Genesys user.   | Yes |
 | Flow.externalIds   | Output |         String Array          | Ids configured in external HRIS system for a matching Genesys user.  | Yes |
