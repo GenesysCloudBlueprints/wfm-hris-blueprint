@@ -108,18 +108,18 @@ The workflow outputs two string arrays — emails and externalIds — each with 
 
 Each pair of arrays in the same bucket must contain the same number of entries, and their order must align to ensure correct matching of email addresses with external IDs.
 
-| Name               | Type   |           Data Type           | Notes                                                                    | Mandatory |
-|:-------------------|:-------|:-----------------------------:|:-------------------------------------------------------------------------|:----------|
-| Flow.statusCode    | Output |  Integer (HTTP status code)   | 200 on success, 500 on error, 408 on timeout                             | Yes       |
-| Flow.status        | Output |            String             | Set to “Complete” on success; otherwise, set to “Error”                  | Yes       |
-| Flow.errorMsg      | Output |            String             | Error message if the workflow fails                                      | No        |
-| Flow.emails        | Output |         String Array          | Email addresses from the external HRIS system that match Genesys users   | Yes       |
-| Flow.externalIds   | Output |         String Array          | External agent IDs corresponding to the matched email addresses          | Yes       |
-| Flow.emails1       | Output |         String Array          | Additional bucket for email addresses                                    | No        |
-| Flow.externalIds1  | Output |         String Array          | Additional bucket for external IDs                                       | No        |
-| ..                 | ..     |              ..               | ..                                                                       |           |
-| Flow.emails24      | Output |         String Array          | Additional buckets (up to 24) for email addresses                        | No        |
-| Flow.externalIds24 | Output |         String Array          | Additional bucket for external IDs                                       | No        |
+| Name               |           Data Type           | Notes                                                                    | Mandatory |
+|:-------------------|:-----------------------------:|:-------------------------------------------------------------------------|:----------|
+| Flow.statusCode    |  Integer (HTTP status code)   | 200 on success, 500 on error, 408 on timeout                             | Yes       |
+| Flow.status        |            String             | Set to “Complete” on success; otherwise, set to “Error”                  | Yes       |
+| Flow.errorMsg      |            String             | Error message if the workflow fails                                      | No        |
+| Flow.emails        |         String Array          | Email addresses from the external HRIS system that match Genesys users   | Yes       |
+| Flow.externalIds   |         String Array          | External agent IDs corresponding to the matched email addresses          | Yes       |
+| Flow.emails1       |         String Array          | Additional bucket for email addresses                                    | No        |
+| Flow.externalIds1  |         String Array          | Additional bucket for external IDs                                       | No        |
+| ..                 |              ..               | ..                                                                       |           |
+| Flow.emails24      |         String Array          | Additional buckets (up to 24) for email addresses                        | No        |
+| Flow.externalIds24 |         String Array          | Additional bucket for external IDs                                       | No        |
 
 ## HRIS-Get-Timeoff-Types Workflow
 
@@ -139,14 +139,14 @@ Genesys Cloud does not pass any input parameters to this workflow.
 
 The workflow returns three string arrays representing the IDs, names, and optional secondary IDs of time-off types from the external HRIS system. The number of entries in all returned arrays must match, and the order must align to ensure correct mapping. 
 
-| Name               | Type   |           Data Type           | Notes                                                                | Mandatory |
-|:-------------------|:-------|:-----------------------------:|:---------------------------------------------------------------------|:----------|
-| Flow.statusCode    | Output |  Integer (HTTP status code)   | 200 on success, 500 on error, 408 on timeout                         | Yes       |
-| Flow.status        | Output |            String             | Set to “Complete” on success; otherwise, set to “Error”              | Yes       |
-| Flow.errorMsg      | Output |            String             | Error message if the workflow fails                                  | No        |
-| Flow.ids           | Output |         String Array          | Primary IDs of time-off types configured in the external HRIS system | Yes       |
-| Flow.names         | Output |         String Array          | Names of time-off types                                              | Yes       |
-| Flow.id2s          | Output |         String Array          | Optional secondary IDs for time-off types                            | No        |
+| Name               |           Data Type           | Notes                                                                | Mandatory |
+|:-------------------|:-----------------------------:|:---------------------------------------------------------------------|:----------|
+| Flow.statusCode    |  Integer (HTTP status code)   | 200 on success, 500 on error, 408 on timeout                         | Yes       |
+| Flow.status        |            String             | Set to “Complete” on success; otherwise, set to “Error”              | Yes       |
+| Flow.errorMsg      |            String             | Error message if the workflow fails                                  | No        |
+| Flow.ids           |         String Array          | Primary IDs of time-off types configured in the external HRIS system | Yes       |
+| Flow.names         |         String Array          | Names of time-off types                                              | Yes       |
+| Flow.id2s          |         String Array          | Optional secondary IDs for time-off types                            | No        |
 
 ## HRIS-Get-Balance Workflow
 
@@ -183,7 +183,7 @@ If a secondary time-off type ID was provided in the input, it must be included a
 | Flow.dates               | String Array               | Dates (in YYYY-MM-DD format) for which balances were returned                            | Yes       |
 | Flow.timeOffTypeId2s     | String Array               | Optional secondary external time-off type IDs                                            | No        |
 
-## HRIS-Insert-TimeOff flow
+## HRIS-Insert-TimeOff Workflow
 
 This workflow inserts a new time-off request into the external HRIS. If the insertion is successful, the workflow returns the external time-off request ID generated by the HRIS.
 
@@ -222,7 +222,7 @@ The workflow should return an external `timeOffRequestId` if it successfully add
 | Flow.errorMsg         | String                     | Error message if the workflow fails                                                                     | No        |
 | Flow.timeOffRequestId | String                     | External `timeOffRequestId` created in the HRIS                                                         | No        |
 
-## HRIS-Update-TimeOff flow
+## HRIS-Update-TimeOff Workflow
 
 This workflow updates a time-off request in an external HRIS system after it has been modified in Genesys Cloud WFM. If the `timeOffStatus` input is `CANCELED` or `DENIED`, the workflow may remove or similarly cancel the time-off request in the external HRIS.
 
@@ -231,7 +231,7 @@ If the request is submitted in a `PENDING` status, the workflow should first ver
 
 Genesys Cloud WFM marks the time-off request as successfully synchronized. If the workflow invocation fails, the synchronization status is set to FAILED.
 
-### Flow invocation context and details
+### Invocation
 
 This flow is invoked, when time-off request that has been previously inserted in external HRIS is changing within Genesys Cloud WFM. 
 
