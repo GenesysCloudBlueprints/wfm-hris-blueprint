@@ -6,7 +6,7 @@ icon: blueprint
 image: images/hris_integration_overview.png
 category: 12
 summary: |
-  This Genesys Cloud Developer Blueprint integrates Genesys Cloud with an HRIS to retrieve employee time-off balances and provide that information in Genesys Cloud workforce management. When a time-off request is created or updated in Genesys Cloud workforce management, the integration inserts the request to the HRIS for tracking and verification against the employee's available balance.
+  This Genesys Cloud Developer Blueprint integrates Genesys Cloud with an HRIS to retrieve employee time-off balances and provide that information in Genesys Cloud workforce management. When a time-off request is approved, or an approved request is updated in Genesys Cloud Workforce Management, the integration inserts the request into the HRIS for tracking and verification against the employee's available balance.
 ---
 :::{"alert":"primary","title":"About Genesys Cloud Blueprints","autoCollapse":false} 
 Genesys Cloud blueprints were built to help you jump-start building an application or integrating with a third-party partner. 
@@ -15,7 +15,7 @@ Blueprints are meant to outline how to build and deploy your solutions, not a pr
 For more information about Genesys Cloud blueprint support and practices, see our Genesys Cloud blueprint [FAQ](https://developer.genesys.cloud/blueprints/faq "Opens the Blueprint FAQ") sheet.
 :::
 
-This Genesys Cloud Developer Blueprint integrates Genesys Cloud with an HRIS to retrieve employee time-off balances and provide that information in Genesys Cloud workforce management. When a time-off request is created or updated in Genesys Cloud workforce management, the integration inserts the request into the HRIS for tracking and verification against the employee's available balance.
+This Genesys Cloud Developer Blueprint integrates Genesys Cloud with an HRIS to retrieve employee time-off balances and provide that information in Genesys Cloud workforce management. When a time-off request is approved, or an approved request is updated in Genesys Cloud Workforce Management, the integration inserts the request into the HRIS for tracking and verification against the employee's available balance.
 
 You can configure and run this integration from within your Genesys Cloud organization. Architect flows and data actions to sync time-off data with your preferred HRIS. The following image shows a BambooHR integration.
 
@@ -82,85 +82,186 @@ The integration provides the following examples of Architect flows:
 **Note** These flows can be updated as needed for your specific business purposes.
 :::
 
-### HRIS-Get-Agents flow
+## HRIS-Get-Agents Workflow
 
-The purpose of this workflow is to to provide unique ids of agents in external HRIS system together with their emails, according to which these agents can be mapped to the user records in Genesys Cloud. 
+This workflow retrieves unique agent IDs and email addresses from an external HRIS system. The email address in the HRIS system must exactly match the email address defined in the corresponding Genesys Cloud user record. Using the email address, Genesys Cloud matches each user record with its associated external HRIS ID. Genesys Cloud then uses this external ID as an input parameter when invoking workflows to retrieve agent time-off balances or to create or update time-off requests.
 
-This workflow is expected to return a list of emailIds and associated externalIds of the agents from external HRIS system that is to be synchronized with Genesys users. 
+The workflow is expected to retrieve all agents associated with the integration each time it runs. If an agent previously associated with an integration is not returned in a subsequent run, Genesys Cloud will remove the association and clear the external ID for that agent.
 
-The number of records in both lists should match. The list order is important as the system will use the order to match elements in list of ids with the list of emails.
+This workflow is optional. External agent IDs can also be set manually using the Genesys Cloud UI or API.
 
-The email ID of a given agent configured in external HRIS system should match to that of the user defined in Genesys and that is the key based on which the agents in two systems are integrated.
+### Invocation
 
-The flow does not have need a input parameter and the out of the workflow would be a list of emailId and externalId both of which are string data types. Below is a table showing that information.
+If automatic synchronization is enabled in configuration, the workflow runs every 24 hours to synchronize agents newly added in the external HRIS system with Genesys Cloud.
 
-Note that a workflow variable can only have up to 2000 entries maximum and hence to facilitate that there are 25 buckets of emails and externalIds provided to send up 50K agent details.
-The indexed of additional buckets start from 1 through 24 in addition to the initial bucket. 
+The workflow runs for the first time shortly after the initial HRIS integration is activated for an organization. From that point forward, all “Get Agents” workflows across integrations for the organization run on the same 24-hour schedule, with their start time based on the first activation timestamp.
 
-The workflow is assigned to the WFM Integration configuration property of "User Account IDs" that has a description of "An architect workflow to retrieve a list of users from HRIS". This will ensure the workflow
-is triggered as part of scheduled agent synchronization process
+Manual triggering or scheduling of synchronization is not supported.
 
-| Name               | Type   |           Data Type           | Notes                                       | Mandatory |
-|:-------------------|:-------|:-----------------------------:|:--------------------------------------------|:----------|
-| Flow.statusCode    | Output | HTTP status code <br/>Integer | Less than 300 if success                    | Yes       |
-| Flow.status        | Output |            String             | Set 'Complete' if success                   | Yes       |
-| Flow.errorMsg      | Output |            String             | Message describing the error if not success | No        |
-| Flow.emails        | Output |         String Array          | Maximum of 2000 strings                     | Yes       |
-| Flow.externalIds   | Output |         String Array          | Maximum of 2000 strings                     | Yes       |
-| Flow.emails1       | Output |         String Array          | Next bucket for 2000 emails                 | No        |
-| Flow.externalIds1  | Output |         String Array          | Next bucket for 2000 externalIds            | No        |
-| ..                 | ..     |              ..               | ..                                          |           |
-| Flow.emails24      | Output |         String Array          | Next bucket for 2000 emails                 | No        |
-| Flow.externalIds24 | Output |         String Array          | Next bucket for 2000 externalIds            | No        |
+### Input
 
-### HRIS-Get-Timeoff-Types flow
+Genesys Cloud does not pass any input parameters to this workflow.
 
-This flow receives a list of all time-off types from the HRIS. The time-off type consists of an ID/key, a name, and an optional secondary ID. Genesys Cloud workforce management sends this info back to the HRIS when it checks an agent's time-off balance or inserts or modifies time-off requests.
+### Output
 
-You can use the optional secondary ID if a single ID does not sufficiently identify a time-off type and its accrual rule in the HRIS. There's also an optional secondary ID that stores additional time-off type information.
+The workflow outputs two string arrays — emails and externalIds — each with a maximum of 2,000 entries. To support up to 50,000 agents, the output includes 25 buckets for each array (emails through emails24, and externalIds through externalIds24).
 
-When Genesys Cloud workforce management checks an agent's time-off balance or inserts or modifies a time-off request, it passes the secondary ID back to the HRIS.
+Each pair of arrays in the same bucket must contain the same number of entries, and their order must align to ensure correct matching of email addresses with external IDs.
 
-### HRIS-Get-Balance flow
+| Name               |           Data Type           | Notes                                                                    | Mandatory |
+|:-------------------|:-----------------------------:|:-------------------------------------------------------------------------|:----------|
+| Flow.statusCode    |  Integer (HTTP status code)   | 200 on success, 500 on error, 408 on timeout                             | Yes       |
+| Flow.status        |            String             | Set to “Complete” on success; otherwise, set to “Error”                  | Yes       |
+| Flow.errorMsg      |            String             | Error message if the workflow fails                                      | No        |
+| Flow.emails        |         String Array          | Email addresses from the external HRIS system that match Genesys users   | Yes       |
+| Flow.externalIds   |         String Array          | External agent IDs corresponding to the matched email addresses          | Yes       |
+| Flow.emails1       |         String Array          | Additional bucket for email addresses                                    | No        |
+| Flow.externalIds1  |         String Array          | Additional bucket for external IDs                                       | No        |
+| ..                 |              ..               | ..                                                                       |           |
+| Flow.emails24      |         String Array          | Additional buckets (up to 24) for email addresses                        | No        |
+| Flow.externalIds24 |         String Array          | Additional bucket for external IDs                                       | No        |
 
-An agent's time-off balances is received in this flow. Multi-day and multi-time-off balance information are retrieved.
+## HRIS-Get-Timeoff-Types Workflow
 
-### HRIS-Insert-TimeOff flow
+This workflow retrieves a list of time-off types from an external HRIS system. Each time-off type includes a primary ID (or key), a name, and an optional secondary ID. Genesys Cloud WFM uses this information when checking an agent’s time-off balance or when creating or updating time-off requests.
 
-This flow inserts a new time-off request into the HRIS. The request contains the following information:
+The optional secondary ID can be used when a single ID is insufficient to identify a time-off type and its corresponding accrual rule in the HRIS. Usage of the secondary ID depends on the specific HRIS. When present, the secondary ID is included in subsequent requests from Genesys Cloud WFM to the HRIS.
 
-* Agent ID
-* A flag (true/false) to override the balance threshold
-* Earliest time-off request date
-* Latest time-off request date
-* Average amount of time-off minutes (hours) per time-off day
-* List of time-off days containing a date
-* Amount of time-off minutes per day
+### Invocation
 
-:::primary
-**Note**
-Time-off requests are only propagated if approved by Genesys Cloud workforce management.
-:::
+This workflow is invoked through the Genesys Cloud WFM admin interface when a time-off plan is associated with an external HRIS integration. Upon selecting the HRIS integration, the system queries available time-off types from the external HRIS. The administrator can then map an external time-off type to the corresponding Genesys time-off plan and activity codes.
 
-This flow should check if agents cannot exceed certain balance thresholds in the HRIS and the flag to override the threshold is set to false. If this is the case, data actions may have to be invoked separately.
+### Input
 
-### HRIS-Update-TimeOff flow
+Genesys Cloud does not pass any input parameters to this workflow.
 
-The corresponding information in WFM changes when a time-off record in the HRIS is updated. This request contains the following information:
+### Output
 
-* Agent ID
-* HRIS time-off request ID
-* A flag (true/false) to override the balance threshold
-* New time-off status
-* Earliest time-off request date
-* Latest time-off request date
-* Average amount of time-off minutes (hours) per time-off day
-* List of time-off days containing a date
-* Amount of time-off minutes per day
+The workflow returns three string arrays representing the IDs, names, and optional secondary IDs of time-off types from the external HRIS system. The number of entries in all returned arrays must match, and the order must align to ensure correct mapping. 
 
-:::primary
-**Note** HRIS time-off request IDs are updated or replaced based on whether an existing record is updated or replaced.
-:::
+| Name               |           Data Type           | Notes                                                                | Mandatory |
+|:-------------------|:-----------------------------:|:---------------------------------------------------------------------|:----------|
+| Flow.statusCode    |  Integer (HTTP status code)   | 200 on success, 500 on error, 408 on timeout                         | Yes       |
+| Flow.status        |            String             | Set to “Complete” on success; otherwise, set to “Error”              | Yes       |
+| Flow.errorMsg      |            String             | Error message if the workflow fails                                  | No        |
+| Flow.ids           |         String Array          | Primary IDs of time-off types configured in the external HRIS system | Yes       |
+| Flow.names         |         String Array          | Names of time-off types                                              | Yes       |
+| Flow.id2s          |         String Array          | Optional secondary IDs for time-off types                            | No        |
+
+## HRIS-Get-Balance Workflow
+
+This workflow retrieves time-off balances for a given agent, based on requested dates and external time-off types. Genesys Cloud WFM uses this workflow to present time-off balances for the requested periods. It does **not** verify whether an agent is permitted to take additional time off.
+
+### Invocation
+
+This workflow is invoked via the Genesys Cloud WEM admin interface and agent time-off request screens whenever administrators or agents view time-off balances.
+
+### Input
+
+If provided, the array of secondary time-off type IDs will have the same number of entries and follow the same order as the primary time-off type IDs.
+
+| Name                    |   Data Type  | Notes                                                                   | Mandatory |
+|:------------------------|:------------:|:------------------------------------------------------------------------|:----------|
+|Flow.inputDates          | String Array | Dates for which time off balance is requested (in YYYY-MM-DD format)    | Yes       |
+|Flow.inputTimeOffTypeIds | String Array | External time-off type IDs to check balances for                        | Yes       |
+|Flow.agentId             |    String    | External HRIS agent ID                                                  | Yes       |
+|Flow.inputTimeOffTypeId2s| String Array | Optional secondary time-off type IDs, if defined for the time-off types | No        |
+
+### Output
+
+All output arrays must be the same length. This length equals the product of the number of input dates and the number of time-off types. There should be one entry for every combination of date and time-off type. The order of items across all output arrays must be aligned, although the order itself does not matter.
+
+If a secondary time-off type ID was provided in the input, it must be included alongside the corresponding primary ID in the output.
+
+| Name                     | Data Type                  | Notes                                                                                    | Mandatory |
+|:-------------------------|:---------------------------|:-----------------------------------------------------------------------------------------|:----------|
+| Flow.statusCode          | Integer (HTTP status code) | 200 on success, 500 on error, 408 on timeout                                             | Yes       |
+| Flow.status              | String                     | Set to “Complete” on success; otherwise, set to “Error”                                  | Yes       |
+| Flow.errorMsg            | String                     | Error message if the workflow fails                                                      | No        |
+| Flow.balanceMinutesPerDay| String Array               | Time-off balances in minutes for the specified dates and time-off types                  | Yes       |
+| Flow.timeOffTypeIds      | String Array               | External time-off type IDs for which balances were returned                              | Yes       |
+| Flow.dates               | String Array               | Dates (in YYYY-MM-DD format) for which balances were returned                            | Yes       |
+| Flow.timeOffTypeId2s     | String Array               | Optional secondary external time-off type IDs                                            | No        |
+
+## HRIS-Insert-TimeOff Workflow
+
+This workflow inserts a new time-off request into the external HRIS. If the insertion is successful, the workflow returns the external time-off request ID generated by the HRIS.
+
+If the request is submitted in a `PENDING` status, the workflow should first verify the agent’s time-off balance. If the agent’s balance is insufficient, it must set the `status` to `InsufficientBalance`. This response prevents the time-off request from being auto-approved in Genesys Cloud WFM.
+
+If the workflow invocation returns an error, the time-off synchronization status in Genesys Cloud WFM is set to "failed"".
+
+### Invocation
+
+This workflow is invoked when a time-off request is submitted via the Genesys Cloud WFM admin interface (for approved requests) or via either the admin or agent interface (for pending requests). To trigger the workflow, the time-off request must be linked to a time-off plan in Genesys Cloud WFM, and that plan must be associated with an HRIS integration.
+
+### Input
+
+One of the `dates` or `startDateTimes` arrays will be provided to the flow as input. This array is aligned with the `payableMinutes` array.
+
+| Name                  | Data Type        | Notes                                                                                                      | Mandatory |
+|-----------------------|------------------|------------------------------------------------------------------------------------------------------------|-----------|
+| Flow.agentId          | String           | External HRIS agent ID for whom the time-off request is being inserted                                     | Yes       |
+| Flow.dates            | String Array     | Dates for the time-off request in `YYYY-MM-DD` format; includes all days spanning the request              | Yes       |
+| Flow.startDateTimes   | String Array     | For partial-day time-off requests only; ISO datetime strings in `YYYY-MM-DDTHH:mm:ss` format               | No        |
+| Flow.minDate          | String           | Earliest date of the request (in `YYYY-MM-DD` format)                                                      | Yes       |
+| Flow.maxDate          | String           | Latest date of the request (in `YYYY-MM-DD` format)                                                        | Yes       |
+| Flow.timeOffStatus    | String           | One of: `APPROVED`, `PENDING`                                                                              | Yes       |
+| Flow.timeOffTypeId    | String           | External time-off type ID configured in the HRIS                                                           | Yes       |
+| Flow.payableMinutes   | String Array     | Payable minutes for each date in the request                                                               | Yes       |
+| Flow.notes            | String           | Optional notes attached to the request                                                                     | No        |
+
+### Output
+
+The workflow should return an external `timeOffRequestId` if it successfully adds the time-off request to the external HRIS. If the agent does not have enough balance, the workflow must return `statusCode` as `200`, with the `status` set to `InsufficientBalance`.
+
+| Name                  | Data Type                  | Notes                                                                                                   | Mandatory |
+|-----------------------|----------------------------|---------------------------------------------------------------------------------------------------------|-----------|
+| Flow.statusCode       | Integer (HTTP status code) | 200 on success, 500 on error, 408 on timeout                                                            | Yes       |
+| Flow.status           | String                     | `Complete` on success; `InsufficientBalance` if the agent lacks sufficient balance; otherwise, `Error`  | Yes       |
+| Flow.errorMsg         | String                     | Error message if the workflow fails                                                                     | No        |
+| Flow.timeOffRequestId | String                     | External `timeOffRequestId` created in the HRIS                                                         | No        |
+
+## HRIS-Update-TimeOff Workflow
+
+This workflow updates a time-off request in an external HRIS system after it has been modified in Genesys Cloud WFM. If the `timeOffStatus` input is `CANCELED` or `DENIED`, the workflow may remove or similarly cancel the time-off request in the external HRIS.
+
+If the request is submitted in a `PENDING` status, the workflow should first verify the agent’s time-off balance. If the agent’s balance is insufficient, it must set the `status` to `InsufficientBalance`. This response prevents the time-off request from being auto-approved in Genesys Cloud WFM.
+
+
+Genesys Cloud WFM marks the time-off request as successfully synchronized. If the workflow invocation fails, the synchronization status is set to FAILED.
+
+### Invocation
+
+This flow is invoked, when time-off request that has been previously inserted in external HRIS is changing within Genesys Cloud WFM. 
+
+### Input
+
+One of the `dates` or `startDateTimes` arrays will be provided to the flow as input. This array is aligned with the `payableMinutes` array.
+
+| Name                  | Data Type        | Notes                                                                                                      | Mandatory |
+|-----------------------|------------------|------------------------------------------------------------------------------------------------------------|-----------|
+| Flow.agentId          | String           | External HRIS agent ID for whom the time-off request is being updated                                      | Yes       |
+| Flow.dates            | String Array     | Dates for the time-off request in `YYYY-MM-DD` format; includes all days spanning the request              | Yes       |
+| Flow.startDateTimes   | String Array     | For partial-day time-off requests only; ISO datetime strings in `YYYY-MM-DDTHH:mm:ss` format               | No        |
+| Flow.minDate          | String           | Earliest date of the request (in `YYYY-MM-DD` format)                                                      | Yes       |
+| Flow.maxDate          | String           | Latest date of the request (in `YYYY-MM-DD` format)                                                        | Yes       |
+| Flow.timeOffStatus    | String           | One of: `APPROVED`, `PENDING`, `DENIED`, `CANCELED`                                                        | Yes       |
+| Flow.timeOffTypeId    | String           | External time-off type ID configured in the HRIS                                                           | Yes       |
+| Flow.payableMinutes   | String Array     | Payable minutes for each date in the request                                                               | Yes       |
+| Flow.notes            | String           | Optional notes attached to the request                                                                     | No        |
+
+### Output
+
+The workflow should return the external `timeOffRequestId` if it successfully updates the request in the HRIS. If the agent does not have ensufficient balance, it must return `statusCode` as `200`, with the `status` set to `InsufficientBalance`.
+
+| Name                   | Data Type                  | Notes                                                                                                   | Mandatory |
+|------------------------|----------------------------|---------------------------------------------------------------------------------------------------------|-----------|
+| Flow.statusCode        | Integer (HTTP status code) | 200 on success, 500 on error, 408 on timeout                                                            | Yes       |
+| Flow.status            | String                     | `Complete` on success; `InsufficientBalance` if balance is insufficient; otherwise, `Error`             | Yes       |
+| Flow.errorMsg          | String                     | Error message if the workflow fails                                                                     | No        |
+| Flow.timeOffRequestId  | String                     | External `timeOffRequestId` associated in the HRIS                                                      | Yes       |
+
 
 ### Example data actions
 
@@ -262,16 +363,138 @@ For more information, see [About Architect](https://help.mypurecloud.com/?p=5368
 
 ## Test the workflows with the Genesys Cloud API
 
-Test your published flows with Genesys Cloud public API calls. As a client, you can use curl or your preferred method to call an API.
+### Select test tool
 
-1. Authenticate your client and get a bearer token to call an API. For more information, [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code "Goes to the Grant - Authorization Code page").
-2. View a flow, execute a flow, and obtain execution results using the following API calls:
-  * [GET /api/v2/flows/{flowId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows--flowId- "Opens the GET /api/v2/flows/{flowId}") to check a configured flow.
-  * [POST /api/v2/flows/executions](https://developer.genesys.cloud/routing/architect/#post-api-v2-flows-executions "Opens the POST /api/v2/flows/executions") to pass input parameters and start flow execution.
-  * [GET /api/v2/flows/executions/{flowExecutionId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows-executions--flowExecutionId- "Opens the GET /api/v2/flows/executions/{flowExecutionId}") to check flow execution status and get results.
+There are two convenient ways to make API calls to Genesys Cloud: Postman and [Genesys Cloud API Explorer](https://developer.genesys.cloud/devapps/api-explorer). Below you'll find an information about both tools usage.
 
-  For more information, see the [Architect APIs](https://developer.genesys.cloud/routing/architect/ "Opens the Architect APIs") in the Genesys Cloud Developer Center.
+As a client, you can also use your preferred method to call an API, for instance, curl.
 
+#### Use Postman to test workflows
+
+Postman is a popular third-party tool to make REST API requests. Genesys Cloud provides Postman collection among with environment files to simplify. Please, refer to [Genesys Cloud Developer Center - Postman](https://developer.genesys.cloud/platform/api/postman) for detailed information and authentication instructions.
+
+
+#### Use Genesys Cloud API Explorer to test workflows
+
+[API Explorer](https://developer.genesys.cloud/devapps/api-explorer) provides convenient way to test your workflows with built-in authentication. For detailed usage guide, please refer to [API Explorer usage](https://developer.genesys.cloud/devapps/about/api-explorer).
+
+Please, refer to [API Explorer Documentation](https://developer.genesys.cloud/devapps/about/api-explorer) for detailed usage instructions. 
+
+* Under Category list in right area of the page, click "Clear all" and select Architect - you'll see list of API endpoints
+* Locate POST to "/api/v2/flows/executions", click it - this is endpoint to trigger workflow execution
+* Disable "Reading mode" toggle
+* Enable "Pro Mode" toggle to switch to raw json input. Click "Load empty schema" and fill it with your values.
+![alt text](images/api-explorer.png)
+* Add values to invoke execution of different workflows
+* You can find examples of "inputData" and other values below in this document, in [Examples of requests](#examples-of-requests) section.
+
+
+### Authentication
+
+Skip this section if you're using [API Explorer](https://developer.genesys.cloud/devapps/api-explorer).
+For Postman usage, please, refer to [Genesys Cloud Developer Center - Postman](https://developer.genesys.cloud/platform/api/postman)
+
+If you're using some other third-party client, such as curl, authenticate your client and get a bearer token to call an API. For more information, please refer to [Grant - Authorization Code](https://developer.genesys.cloud/authorization/platform-auth/use-authorization-code).
+
+### Obtain workflow id
+
+To be able to test, for each imported workflow you'll need its unique ID. 
+
+To da that, sens GET to /api/v2/flows with workflow name as a query parameter using your selected test tool. For example: /api/v2/flows?name="my_flow_name".
+
+Alternatively: open published Workflow in Architect and locate Id in your browser address line as shown below:
+![alt text](images/architect_workflow_id.png)
+
+
+### Trigger workflow execution
+
+Every workflow execution could be triggered by [POST /api/v2/flows/executions](https://developer.genesys.cloud/routing/architect/#post-api-v2-flows-executions "Opens the POST /api/v2/flows/executions"). Below you can find examples of correct requests bodies for each workflow.
+
+As a result of each request, you will receive an individual {flowExecutionId}, which will be used later.
+
+### Get flow execution result
+
+Once {flowExecutionId} is received, you can check execution result by sending [GET /api/v2/flows/executions/{flowExecutionId}](https://developer.genesys.cloud/routing/architect/#get-api-v2-flows-executions--flowExecutionId- "Opens the GET /api/v2/flows/executions/{flowExecutionId}"). This request doesn't require any data or parameters.
+
+### Examples of requests
+
+Below you can find examples of requests and expected results for each sample workflow.
+
+
+#### HRIS-Get-Agents-Flow
+
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_get_agents}"
+}
+```
+
+#### HRIS-Get-Timeoff-Types flow
+
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_get_timeoff_types}"
+}
+```
+
+#### HRIS-Get-Balance flow
+
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_get_balance}",
+  "inputData": {
+    "Flow.inputDates": ["2025-06-01"],
+    "Flow.inputTimeOffTypeIds":[
+            "83",
+            "90",
+            "85"
+        ],
+
+    "Flow.agentId": "452"
+    
+  }
+}
+```
+
+#### HRIS-Insert-TimeOff flow
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_insert_timeoff}",
+  "inputData": {
+    "Flow.agentId": "452",
+    "Flow.notes": "Testing timeoff",
+    "Flow.dates":["2025-03-29", "2025-03-30", "2025-03-31"],
+    "Flow.minDate": "2025-03-29",
+    "Flow.maxDate" : "2025-03-31",
+    "Flow.timeOffStatus":"APPROVED",
+    "Flow.timeOffTypeId":"83",
+    "Flow.payableMinutes":["480", "480", "480"]
+  }
+}
+```
+
+#### HRIS-Update-TimeOff flow
+```
+POST /api/v2/flows/executions
+{
+  "flowId": "${flow_id_update_timeoff}",
+  "inputData": {
+    "Flow.agentId": "452",
+    "Flow.notes": "Testing timeoff",
+    "Flow.dates":["2025-03-29", "2025-03-30", "2025-03-31", "2025-04-01"],
+    "Flow.minDate": "2025-03-29",
+    "Flow.maxDate" : "2025-04-01",
+    "Flow.timeOffStatus":"APPROVED",
+    "Flow.timeOffTypeId":"83",
+    "Flow.payableMinutes":["480", "480", "480", "480"],
+    "Flow.inputTimeOffRequestId":"{{previous_timeoff_id}}"
+  }
+}
+```
 ## Additional resources
 
 * [wfm-hris-blueprint repository](https://github.com/GenesysCloudBlueprints/wfm-hris-blueprint "Opens the wfm-hris-blueprint repository") in GitHub.
